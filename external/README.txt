@@ -1,0 +1,1 @@
+This folder contains works from external sources. These are not my designs.

@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "validate-organizers": "node _scripts/validate-organizers.js"
+    }
+}

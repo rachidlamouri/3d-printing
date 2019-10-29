@@ -1,4 +1,4 @@
-module rectangle (innerWidth, innerDepth, outerHeight) {
+module container (innerWidth, innerDepth, outerHeight) {
     bottomThickness = 1;
     innerHeight = outerHeight - bottomThickness;
     sizeMultiple = 2;

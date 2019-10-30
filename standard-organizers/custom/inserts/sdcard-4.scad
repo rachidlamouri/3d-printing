@@ -3,11 +3,19 @@ outerDepth = 1;
 connectorWidth = 3;
 connectorDepth = 25;
 height = 18;
-innerHoleWidth = 3;
+innerHoleWidth = connectorWidth;
 outerHoleWidth = (outerWidth - (3*connectorWidth + 2*innerHoleWidth))/2;
 
 outerWall = [outerWidth, outerDepth, height];
 connector = [connectorWidth, connectorDepth, height];
+
+widthTolerance = 1;
+depthTolerance = widthTolerance;
+heightTolerance = 2;
+containerWidth = outerWidth + widthTolerance;
+containerDepth = 2*outerDepth + connectorDepth + depthTolerance;
+containerHeight = height + heightTolerance;
+echo("Container", containerWidth, containerDepth, containerHeight);
 
 // top wall
 cube(outerWall);

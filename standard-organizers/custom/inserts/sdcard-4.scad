@@ -1,37 +1,54 @@
-outerWidth = 20;
-outerDepth = 1;
-connectorWidth = 3;
-connectorDepth = 25;
-height = 18;
-innerHoleWidth = connectorWidth;
-outerHoleWidth = (outerWidth - (3*connectorWidth + 2*innerHoleWidth))/2;
+use <../../container.scad>;
 
-outerWall = [outerWidth, outerDepth, height];
-connector = [connectorWidth, connectorDepth, height];
+/*
+  braces: the two outer pieces
+  dividers: the three inner pieces
+*/
 
-widthTolerance = 1;
+// tolerances
+heightTolerance = .2;
+widthTolerance = .5;
 depthTolerance = widthTolerance;
-heightTolerance = 2;
-containerWidth = outerWidth + widthTolerance;
-containerDepth = 2*outerDepth + connectorDepth + depthTolerance;
-containerHeight = height + heightTolerance;
+
+// base container dimensions
+containerBottomThickness = defaultBottomThickness();
+containerHeight = 20;
+
+// base insert dimensions
+innerHoleWidth = 2.6;
+dividerWidth = innerHoleWidth;
+dividerDepth = 24.6;
+braceDepth = 1;
+
+// computed container dimensions
+containerWidth = 4*innerHoleWidth + 3*dividerWidth + widthTolerance;
+containerDepth = 2*braceDepth + dividerDepth + depthTolerance;
+
 echo("Container", containerWidth, containerDepth, containerHeight);
 
-// top wall
-cube(outerWall);
+// computed insert dimensions
+braceWidth = containerWidth - widthTolerance;
+insertHeight = containerHeight - containerBottomThickness - heightTolerance;
+outerHoleWidth = (braceWidth - (3*dividerWidth + 2*innerHoleWidth))/2;
 
-// bottom wall
-translate([0, outerDepth + connectorDepth, 0])
-cube(outerWall);
+brace = [braceWidth, braceDepth, insertHeight];
+divider = [dividerWidth, dividerDepth, insertHeight];
 
-// connector 1
-translate([outerHoleWidth, outerDepth, 0])
-cube(connector);
+// top brace
+cube(brace);
 
-// connector 2
-translate([outerHoleWidth + connectorWidth + innerHoleWidth, outerDepth, 0])
-cube(connector);
+// bottom brace
+translate([0, braceDepth + dividerDepth, 0])
+cube(brace);
 
-// connector 1
-translate([outerHoleWidth + 2*connectorWidth + 2*innerHoleWidth, outerDepth, 0])
-cube(connector);
+// divider 1
+translate([outerHoleWidth, braceDepth, 0])
+cube(divider);
+
+// divider 2
+translate([outerHoleWidth + dividerWidth + innerHoleWidth, braceDepth, 0])
+cube(divider);
+
+// divider 3
+translate([outerHoleWidth + 2*dividerWidth + 2*innerHoleWidth, braceDepth, 0])
+cube(divider);

@@ -57,8 +57,10 @@ module container (
     echo("Width", innerWidth, outerWidth, sideWallThickness);
     echo("Depth", innerDepth, outerDepth, frontWallThickness);
 
-    holeWidth = max(5, innerWidth - 2*bottomClearance);
-    holeDepth = max(5, innerDepth - 2*bottomClearance);
+    baseHoleWidth = max(5, innerWidth - 2*bottomClearance);
+    holeWidth = baseHoleWidth > innerWidth ? innerWidth/2 : baseHoleWidth;
+    baseHoleDepth = max(5, innerDepth - 2*bottomClearance);
+    holeDepth = baseHoleDepth > innerDepth ? innerDepth/2 : baseHoleDepth;
     holeX = sideWallThickness + innerWidth/2 - holeWidth/2;
     holeY = frontWallThickness + innerDepth/2 - holeDepth/2;
     

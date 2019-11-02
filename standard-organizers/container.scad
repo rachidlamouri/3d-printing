@@ -54,8 +54,9 @@ module container (
     sideWallThickness = getSideWallThickness(innerWidth, minWallThickness, sideMultiple);
     frontWallThickness = getFrontWallThickness(innerDepth, minWallThickness, sideMultiple);
 
-    echo("Width", innerWidth, outerWidth, sideWallThickness);
-    echo("Depth", innerDepth, outerDepth, frontWallThickness);
+    echo("File dimensions", innerWidth, innerDepth, outerHeight);
+    echo("Outer dimensions", outerWidth, outerDepth, outerHeight);
+    echo("Walls", sideWallThickness, frontWallThickness);
 
     baseHoleWidth = max(5, innerWidth - 2*bottomClearance);
     holeWidth = baseHoleWidth > innerWidth ? innerWidth/2 : baseHoleWidth;

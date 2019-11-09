@@ -6,17 +6,21 @@ function defaultSideMultiple() = 2;
 
 function getOuterWidth(innerWidth, minWallThickness, sideMultiple) = ceil((innerWidth + 2*minWallThickness)/sideMultiple)*sideMultiple;
 function getOuterDepth(innerDepth, minWallThickness, sideMultiple) = ceil((innerDepth + 2*minWallThickness)/sideMultiple)*sideMultiple;
+
 function getSideWallThickness(innerWidth, minWallThickness, sideMultiple) = (getOuterWidth(innerWidth, minWallThickness, sideMultiple) - innerWidth)/2;
 function getFrontWallThickness(innerDepth, minWallThickness, sideMultiple) = (getOuterDepth(innerDepth, minWallThickness, sideMultiple) - innerDepth)/2;
 
+function getFrontHoleWidth(innerWidth, frontWallClearance) = max(5, innerWidth - 2*frontWallClearance);
+function getSideHoleDepth(innerDepth, sideWallClearance) = max(5, innerDepth - 2*sideWallClearance);
+
 function getFrontHole(innerWidth, innerDepth, outerHeight, bottomClearance, minWallThickness, frontWallClearance, sideMultiple) = [
   [
-    getSideWallThickness(innerWidth, minWallThickness, sideMultiple) + frontWallClearance,
+    getSideWallThickness(innerWidth, minWallThickness, sideMultiple) + (innerWidth/2 - getFrontHoleWidth(innerWidth, frontWallClearance)/2),
     0,
     bottomClearance
   ],
   [
-    max(5, innerWidth - 2*frontWallClearance),
+    getFrontHoleWidth(innerWidth, frontWallClearance),
     getOuterDepth(innerDepth, minWallThickness, sideMultiple),
     outerHeight
   ]
@@ -25,12 +29,12 @@ function getFrontHole(innerWidth, innerDepth, outerHeight, bottomClearance, minW
 function getSideHole(innerWidth, innerDepth, outerHeight, bottomClearance, minWallThickness, sideWallClearance, sideMultiple) = [
   [
     0,
-    getFrontWallThickness(innerDepth, minWallThickness, sideMultiple) + sideWallClearance,
+    getFrontWallThickness(innerDepth, minWallThickness, sideMultiple) + (innerDepth/2 - getSideHoleDepth(innerDepth, sideWallClearance)/2),
     bottomClearance
   ],
   [
     getOuterWidth(innerWidth, minWallThickness, sideMultiple),
-    max(5, innerDepth - 2*sideWallClearance),
+    getSideHoleDepth(innerDepth, sideWallClearance),
     outerHeight
   ]
 ];

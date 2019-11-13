@@ -1,5 +1,3 @@
-insertTolerance = 1;
-
 cardWidth = 41;
 cardDepth = 64;
 widthOffsetPercent = .5;
@@ -9,11 +7,28 @@ offsetCardDepth = cardDepth*depthOffsetPercent;
 cardHeight = .3;
 stepHeight = 2*cardHeight;
 
+function getCardWidth() = cardWidth;
+function getCardDepth() = cardDepth;
+function getOffsetCardWidth() = offsetCardWidth;
+function getOffsetCardDepth() = offsetCardDepth;
+function getInsertStepHeight() = stepHeight;
 function getColor(number) = [.2*number, 0*number, .2*number,];
+function getMinOuterDimensions(direction, numberOfCards, insertTolerance) = direction == "depth"
+  ? [
+      cardWidth + insertTolerance,
+      cardDepth + (numberOfCards - 1)*offsetCardDepth + insertTolerance,
+      (numberOfCards + 1)*stepHeight + insertTolerance
+  ]
+  : [
+    cardWidth + (numberOfCards - 1)*offsetCardWidth + insertTolerance,
+    cardDepth + insertTolerance,
+    (numberOfCards + 1)*stepHeight + insertTolerance,
+  ];
 
 module damageInsert (
   numberOfCards,
-  direction = "depth"
+  direction = "depth",
+  insertTolerance = 1
 ) {
   cube([cardWidth, cardDepth, stepHeight]);
 
@@ -29,17 +44,7 @@ module damageInsert (
     }
   }
 
-  if (direction == "depth") {
-    totalWidth = cardWidth + insertTolerance;
-    totalDepth = cardDepth + numberOfAdditionalCards*offsetCardDepth + insertTolerance;
-    totalHeight = (numberOfCards + 1)*stepHeight + insertTolerance;
-    echo("Min Outer Dimensions", totalWidth, totalDepth, totalHeight);
-  } else {
-    totalWidth = cardWidth + numberOfAdditionalCards*offsetCardWidth + insertTolerance;
-    totalDepth = cardDepth + insertTolerance;
-    totalHeight = (numberOfCards + 1)*stepHeight + insertTolerance;
-    echo("Min Outer Dimensions", totalWidth, totalDepth, totalHeight);
-  }
+  echo("Min Outer Dimensions", getMinOuterDimensions(direction, numberOfCards, insertTolerance));
 }
 
 damageInsert(4, "width");

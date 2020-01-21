@@ -2,10 +2,20 @@
   "scripts": {
     "clean": "rm -rf ./build/",
     "build": "npm run clean && webpack",
-    "build:watch": "npm run build -- --watch"
+    "build:watch": "npm run build -- --watch",
+    "lint": "eslint --color ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "dependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
     "glob": "^7.1.6",
+    "husky": "^4.2.0",
     "lodash": "^4.17.15",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"

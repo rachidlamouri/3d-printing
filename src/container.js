@@ -1,5 +1,3 @@
-const { makeContainer } = require('./makeContainer.js')
+const { makeContainer } = require('./makeContainer.js');
 
-global.main = () => {
-  return makeContainer();
-};
+global.main = () => makeContainer();

@@ -14,4 +14,4 @@ module.exports = {
     filename: '[name].jscad',
     path: path.resolve(__dirname, 'build'),
   },
-}
+};

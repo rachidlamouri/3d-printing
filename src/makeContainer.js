@@ -8,8 +8,8 @@ module.exports.makeContainer = ({
   const wallThickness = 2;
 
   const outerBoxSize = [
-    innerWidth + 2*wallThickness,
-    innerDepth + 2*wallThickness,
+    innerWidth + 2 * wallThickness,
+    innerDepth + 2 * wallThickness,
     outerHeight,
   ];
 
@@ -19,9 +19,9 @@ module.exports.makeContainer = ({
     outerHeight - bottomThickness,
   ];
 
-  const outerBox = cube({size: outerBoxSize })
+  const outerBox = cube({ size: outerBoxSize });
   const innerBox = cube({ size: innerBoxSize })
     .translate([wallThickness, wallThickness, bottomThickness]);
 
   return difference(outerBox, innerBox);
-}
+};

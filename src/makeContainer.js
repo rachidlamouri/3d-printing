@@ -58,6 +58,7 @@ module.exports.makeContainer = ({
     outerDepth,
     outerHeight,
   ];
+  const outerBox = cube({ size: outerBoxSize });
 
   const innerBoxSize = [
     innerWidth,
@@ -69,6 +70,8 @@ module.exports.makeContainer = ({
     depthWallThickness,
     bottomThickness,
   ];
+  const innerBox = cube({ size: innerBoxSize })
+    .translate(innerBoxPosition);
 
   const bottomHoleSize = [
     bottomHoleWidth,
@@ -80,10 +83,6 @@ module.exports.makeContainer = ({
     outerDepth / 2 - bottomHoleDepth / 2,
     0,
   ];
-
-  const outerBox = cube({ size: outerBoxSize });
-  const innerBox = cube({ size: innerBoxSize })
-    .translate(innerBoxPosition);
   const bottomHoleBox = cube({ size: bottomHoleSize })
     .translate(bottomHolePosition);
 

@@ -7,7 +7,8 @@
   },
   "husky": {
     "hooks": {
-      "post-commit": "npm run lint"
+      "post-commit": "npm run lint",
+      "pre-push": "npm run lint"
     }
   },
   "dependencies": {

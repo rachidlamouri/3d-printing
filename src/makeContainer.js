@@ -9,15 +9,28 @@ module.exports.makeContainer = ({
   sideLengthMultiple = 2,
   minWallThickness = 2,
   bottomThickness = 1,
+  minBottomHoleSideLength = 5,
+  bottomClearance = 16,
 } = {}) => {
   [
     [innerWidth, 'innerWidth'],
     [innerDepth, 'innerDepth'],
     [outerHeight, 'outerHeight'],
     [sideLengthMultiple, 'sideLengthMultiple'],
+    [minBottomHoleSideLength, 'minBottomHoleSideLength'],
+    [bottomClearance, 'bottomClearance'],
   ].forEach(([value, valueName]) => {
     if (!_.isInteger(value)) {
       throw new Error(`${valueName} must be an integer`);
+    }
+  });
+
+  [
+    [innerWidth, 'innerWidth'],
+    [innerDepth, 'innerDepth'],
+  ].forEach(([dimension, dimensionName]) => {
+    if (dimension <= minBottomHoleSideLength) {
+      throw new Error(`${dimensionName} must be greater than minBottomHoleSideLength "${minBottomHoleSideLength}"`);
     }
   });
 
@@ -31,6 +44,15 @@ module.exports.makeContainer = ({
   const widthWallThickness = (outerWidth - innerWidth) / 2;
   const depthWallThickness = (outerDepth - innerDepth) / 2;
 
+  const bottomHoleWidth = Math.max(
+    innerWidth - 2 * bottomClearance,
+    minBottomHoleSideLength,
+  );
+  const bottomHoleDepth = Math.max(
+    innerDepth - 2 * bottomClearance,
+    minBottomHoleSideLength,
+  );
+
   const outerBoxSize = [
     outerWidth,
     outerDepth,
@@ -42,11 +64,34 @@ module.exports.makeContainer = ({
     innerDepth,
     innerHeight,
   ];
+  const innerBoxPosition = [
+    widthWallThickness,
+    depthWallThickness,
+    bottomThickness,
+  ];
+
+  const bottomHoleSize = [
+    bottomHoleWidth,
+    bottomHoleDepth,
+    bottomThickness,
+  ];
+  const bottomHolePosition = [
+    outerWidth / 2 - bottomHoleWidth / 2,
+    outerDepth / 2 - bottomHoleDepth / 2,
+    0,
+  ];
 
   const outerBox = cube({ size: outerBoxSize });
   const innerBox = cube({ size: innerBoxSize })
-    .translate([widthWallThickness, depthWallThickness, bottomThickness]);
-  const container = difference(outerBox, innerBox);
+    .translate(innerBoxPosition);
+  const bottomHoleBox = cube({ size: bottomHoleSize })
+    .translate(bottomHolePosition);
+
+  const container = difference(
+    outerBox,
+    innerBox,
+    bottomHoleBox,
+  );
 
   const containerMeta = {
     container,
@@ -57,6 +102,7 @@ module.exports.makeContainer = ({
       depthWallThickness,
       bottomThickness,
     ],
+    bottomHoleSize,
   };
 
   return containerMeta;

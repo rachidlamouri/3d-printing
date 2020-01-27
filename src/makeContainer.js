@@ -2,6 +2,48 @@ const _ = require('lodash');
 
 const getNextMultiple = (value, multiplier) => Math.ceil(value / multiplier) * multiplier;
 
+const validateParameters = (parameters, extraParameters) => {
+  if (!_.isEmpty(extraParameters)) {
+    throw new Error(`Unexpected extra parameter(s) [${_.keys(extraParameters).join(',')}]`);
+  }
+
+  const isIntegerRule = [_.isInteger, 'must be an integer'];
+  const isPositiveRule = [(value) => value > 0, 'must be greater than zero'];
+  const isNonNegativeRule = [(value) => value >= 0, 'must be greater than or equal to zero'];
+
+  const isPositiveRuleSet = [isPositiveRule];
+  const isPositiveIntegerRuleSet = [
+    isIntegerRule,
+    isPositiveRule,
+  ];
+  const isNonNegativeIntegerRuleSet = [
+    isIntegerRule,
+    isNonNegativeRule,
+  ];
+
+  const keyedRuleSets = {
+    innerWidth: isPositiveIntegerRuleSet,
+    innerDepth: isPositiveIntegerRuleSet,
+    outerHeight: isPositiveIntegerRuleSet,
+    sideLengthMultiple: isPositiveIntegerRuleSet,
+    minWallThickness: isPositiveRuleSet,
+    bottomThickness: isPositiveRuleSet,
+    minBottomHoleSideLength: isNonNegativeIntegerRuleSet,
+    bottomClearance: [
+      [(value) => _.isInteger(value) || value === Infinity, 'must be an integer or positive infinity'],
+      isPositiveRule,
+    ],
+  };
+
+  _.forEach(keyedRuleSets, (ruleSet, parameterName) => {
+    ruleSet.forEach(([test, rule]) => {
+      if (!test(parameters[parameterName])) {
+        throw new Error(`${parameterName} ${rule}`);
+      }
+    });
+  });
+};
+
 module.exports.makeContainer = ({
   innerWidth = 20,
   innerDepth = 20,
@@ -11,28 +53,21 @@ module.exports.makeContainer = ({
   bottomThickness = 1,
   minBottomHoleSideLength = 5,
   bottomClearance = 16,
+  ...extraParameters
 } = {}) => {
-  [
-    [innerWidth, 'innerWidth'],
-    [innerDepth, 'innerDepth'],
-    [outerHeight, 'outerHeight'],
-    [sideLengthMultiple, 'sideLengthMultiple'],
-    [minBottomHoleSideLength, 'minBottomHoleSideLength'],
-    [bottomClearance, 'bottomClearance'],
-  ].forEach(([value, valueName]) => {
-    if (!_.isInteger(value) && value !== Infinity) {
-      throw new Error(`${valueName} must be an integer`);
-    }
-  });
-
-  [
-    [innerWidth, 'innerWidth'],
-    [innerDepth, 'innerDepth'],
-  ].forEach(([dimension, dimensionName]) => {
-    if (dimension <= minBottomHoleSideLength) {
-      throw new Error(`${dimensionName} must be greater than minBottomHoleSideLength "${minBottomHoleSideLength}"`);
-    }
-  });
+  validateParameters(
+    {
+      innerWidth,
+      innerDepth,
+      outerHeight,
+      sideLengthMultiple,
+      minWallThickness,
+      bottomThickness,
+      minBottomHoleSideLength,
+      bottomClearance,
+    },
+    extraParameters,
+  );
 
   const innerHeight = outerHeight - bottomThickness;
 

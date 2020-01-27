@@ -20,7 +20,7 @@ module.exports.makeContainer = ({
     [minBottomHoleSideLength, 'minBottomHoleSideLength'],
     [bottomClearance, 'bottomClearance'],
   ].forEach(([value, valueName]) => {
-    if (!_.isInteger(value)) {
+    if (!_.isInteger(value) && value !== Infinity) {
       throw new Error(`${valueName} must be an integer`);
     }
   });
@@ -86,11 +86,16 @@ module.exports.makeContainer = ({
   const bottomHoleBox = cube({ size: bottomHoleSize })
     .translate(bottomHolePosition);
 
-  const container = difference(
+  const differenceList = [
     outerBox,
     innerBox,
-    bottomHoleBox,
-  );
+  ];
+
+  if (bottomHoleWidth > 0 && bottomHoleDepth > 0) {
+    differenceList.push(bottomHoleBox);
+  }
+
+  const container = difference(...differenceList);
 
   const containerMeta = {
     container,

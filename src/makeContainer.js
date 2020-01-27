@@ -1,5 +1,14 @@
 const _ = require('lodash');
 
+const sizeToMeta = (size) => {
+  const [width, depth, height] = size;
+  return {
+    size,
+    width,
+    depth,
+    height,
+  };
+};
 const getNextMultiple = (value, multiplier) => Math.ceil(value / multiplier) * multiplier;
 
 const validateParameters = (parameters, extraParameters) => {
@@ -44,6 +53,149 @@ const validateParameters = (parameters, extraParameters) => {
   });
 };
 
+const calculateDimensions = ({
+  innerWidth,
+  innerDepth,
+  outerHeight,
+  sideLengthMultiple,
+  minWallThickness,
+  bottomThickness,
+  minBottomHoleSideLength,
+  bottomClearance,
+}) => {
+  const minOuterWidth = innerWidth + 2 * minWallThickness;
+  const minOuterDepth = innerDepth + 2 * minWallThickness;
+  const outerWidth = getNextMultiple(minOuterWidth, sideLengthMultiple);
+  const outerDepth = getNextMultiple(minOuterDepth, sideLengthMultiple);
+
+  return {
+    innerHeight: outerHeight - bottomThickness,
+    outerWidth,
+    outerDepth,
+    widthWallThickness: (outerWidth - innerWidth) / 2,
+    depthWallThickness: (outerDepth - innerDepth) / 2,
+    bottomHoleWidth: Math.max(
+      innerWidth - 2 * bottomClearance,
+      minBottomHoleSideLength,
+    ),
+    bottomHoleDepth: Math.max(
+      innerDepth - 2 * bottomClearance,
+      minBottomHoleSideLength,
+    ),
+  };
+};
+
+const createOuterBox = ({
+  outerWidth,
+  outerDepth,
+  outerHeight,
+}) => {
+  const size = [
+    outerWidth,
+    outerDepth,
+    outerHeight,
+  ];
+
+  return {
+    outerBox: {
+      ...sizeToMeta(size),
+      cube: cube({ size }),
+    },
+  };
+};
+
+const createInnerBox = ({
+  innerWidth,
+  innerDepth,
+  innerHeight,
+  widthWallThickness,
+  depthWallThickness,
+  bottomThickness,
+}) => {
+  const size = [
+    innerWidth,
+    innerDepth,
+    innerHeight,
+  ];
+  const position = [
+    widthWallThickness,
+    depthWallThickness,
+    bottomThickness,
+  ];
+
+  return {
+    innerBox: {
+      ...sizeToMeta(size),
+      cube: cube({ size }).translate(position),
+    },
+  };
+};
+
+const createBottomHole = ({
+  outerWidth,
+  outerDepth,
+  bottomHoleWidth,
+  bottomHoleDepth,
+  bottomThickness,
+}) => {
+  const size = [
+    bottomHoleWidth,
+    bottomHoleDepth,
+    bottomThickness,
+  ];
+  const position = [
+    outerWidth / 2 - bottomHoleWidth / 2,
+    outerDepth / 2 - bottomHoleDepth / 2,
+    0,
+  ];
+
+  return {
+    bottomHole: {
+      ...sizeToMeta(size),
+      cube: cube({ size }).translate(position),
+    },
+  };
+};
+
+const createContainer = ({
+  outerBox,
+  innerBox,
+  bottomHole,
+}) => {
+  const differenceList = [
+    outerBox.cube,
+    innerBox.cube,
+  ];
+
+  if (bottomHole.width > 0 && bottomHole.depth > 0) {
+    differenceList.push(bottomHole.cube);
+  }
+
+  return {
+    container: difference(...differenceList),
+  };
+};
+
+const createDebug = ({
+  innerBox,
+  outerBox,
+  bottomHole,
+  widthWallThickness,
+  depthWallThickness,
+  bottomThickness,
+}) => ({
+  debug: {
+    innerBoxSize: innerBox.size,
+    outerBoxSize: outerBox.size,
+    wallThicknessSizes: [
+      widthWallThickness,
+      depthWallThickness,
+      bottomThickness,
+    ],
+    bottomHoleSize: bottomHole.size,
+  },
+});
+
 module.exports.makeContainer = ({
   innerWidth = 20,
   innerDepth = 20,
@@ -55,94 +207,30 @@ module.exports.makeContainer = ({
   bottomClearance = 16,
   ...extraParameters
 } = {}) => {
-  validateParameters(
-    {
-      innerWidth,
-      innerDepth,
-      outerHeight,
-      sideLengthMultiple,
-      minWallThickness,
-      bottomThickness,
-      minBottomHoleSideLength,
-      bottomClearance,
-    },
-    extraParameters,
-  );
-
-  const innerHeight = outerHeight - bottomThickness;
-
-  const minOuterWidth = innerWidth + 2 * minWallThickness;
-  const minOuterDepth = innerDepth + 2 * minWallThickness;
-  const outerWidth = getNextMultiple(minOuterWidth, sideLengthMultiple);
-  const outerDepth = getNextMultiple(minOuterDepth, sideLengthMultiple);
-
-  const widthWallThickness = (outerWidth - innerWidth) / 2;
-  const depthWallThickness = (outerDepth - innerDepth) / 2;
-
-  const bottomHoleWidth = Math.max(
-    innerWidth - 2 * bottomClearance,
-    minBottomHoleSideLength,
-  );
-  const bottomHoleDepth = Math.max(
-    innerDepth - 2 * bottomClearance,
-    minBottomHoleSideLength,
-  );
-
-  const outerBoxSize = [
-    outerWidth,
-    outerDepth,
-    outerHeight,
-  ];
-  const outerBox = cube({ size: outerBoxSize });
-
-  const innerBoxSize = [
+  const parameters = {
     innerWidth,
     innerDepth,
-    innerHeight,
-  ];
-  const innerBoxPosition = [
-    widthWallThickness,
-    depthWallThickness,
+    outerHeight,
+    sideLengthMultiple,
+    minWallThickness,
     bottomThickness,
-  ];
-  const innerBox = cube({ size: innerBoxSize })
-    .translate(innerBoxPosition);
-
-  const bottomHoleSize = [
-    bottomHoleWidth,
-    bottomHoleDepth,
-    bottomThickness,
-  ];
-  const bottomHolePosition = [
-    outerWidth / 2 - bottomHoleWidth / 2,
-    outerDepth / 2 - bottomHoleDepth / 2,
-    0,
-  ];
-  const bottomHoleBox = cube({ size: bottomHoleSize })
-    .translate(bottomHolePosition);
-
-  const differenceList = [
-    outerBox,
-    innerBox,
-  ];
-
-  if (bottomHoleWidth > 0 && bottomHoleDepth > 0) {
-    differenceList.push(bottomHoleBox);
-  }
-
-  const container = difference(...differenceList);
-
-  const containerMeta = {
-    container,
-    innerBoxSize,
-    outerBoxSize,
-    wallThicknessSize: [
-      widthWallThickness,
-      depthWallThickness,
-      bottomThickness,
-    ],
-    bottomHoleSize,
+    minBottomHoleSideLength,
+    bottomClearance,
   };
+  validateParameters(parameters, extraParameters);
 
-  return containerMeta;
+  return [
+    calculateDimensions,
+    createOuterBox,
+    createInnerBox,
+    createBottomHole,
+    createContainer,
+    createDebug,
+  ].reduce(
+    (meta, assembler) => ({
+      ...meta,
+      ...assembler(meta),
+    }),
+    parameters,
+  );
 };

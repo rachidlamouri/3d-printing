@@ -1,16 +1,16 @@
 const { logger } = require('./logger');
-const { makeContainer } = require('./makeContainer.js');
+const { makeContainer } = require('./makeContainer');
 
 global.main = () => {
   const {
     container,
-    ...meta
+    debug,
   } = makeContainer({
     innerWidth: undefined,
     innerDepth: undefined,
     outerHeight: undefined,
   });
 
-  logger.log(meta);
+  logger.log(debug);
   return container;
 };

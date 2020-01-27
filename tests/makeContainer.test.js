@@ -74,14 +74,24 @@ describe('makeContainer', function () {
   });
 
   context('by default', function () {
-    it('returns container meta', function () {
-      const {
-        container,
-        ...meta
-      } = makeContainer();
+    before(function () {
+      this.containerMeta = makeContainer();
+    });
 
-      expect(container).to.be.an.instanceof(OpenJscadObject);
-      expect(meta).to.eql({
+    it('returns container meta', function () {
+      expect(this.containerMeta).to.be.an('object')
+        .that.includes.keys([
+          'container',
+          'debug',
+        ]);
+    });
+
+    it('returns the container', function () {
+      expect(this.containerMeta.container).to.be.an.instanceof(OpenJscadObject);
+    });
+
+    it('returns debug information', function () {
+      expect(this.containerMeta.debug).to.eql({
         innerBoxSize: [
           20,
           20,
@@ -92,7 +102,7 @@ describe('makeContainer', function () {
           24,
           20,
         ],
-        wallThicknessSize: [
+        wallThicknessSizes: [
           2,
           2,
           1,
@@ -111,7 +121,7 @@ describe('makeContainer', function () {
       const { bottomHoleSize } = makeContainer({
         bottomClearance: Infinity,
         minBottomHoleSideLength: 0,
-      });
+      }).debug;
       expect(bottomHoleSize).to.eql([
         0,
         0,

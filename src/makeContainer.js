@@ -11,38 +11,25 @@ const sizeToMeta = (size) => {
 };
 const getNextMultiple = (value, multiplier) => Math.ceil(value / multiplier) * multiplier;
 
-const validateParameters = (parameters, extraParameters) => {
+const buildIsGreaterThanN = (n) => (value) => value > n;
+const isIntegerRule = [_.isInteger, 'must be an integer'];
+const isPositiveRule = [(value) => value > 0, 'must be greater than zero'];
+const isNonNegativeRule = [(value) => value >= 0, 'must be greater than or equal to zero'];
+
+const isPositiveRuleSet = [isPositiveRule];
+const isPositiveIntegerRuleSet = [
+  isIntegerRule,
+  isPositiveRule,
+];
+const isNonNegativeIntegerRuleSet = [
+  isIntegerRule,
+  isNonNegativeRule,
+];
+
+const validateParameters = (parameters, extraParameters, keyedRuleSets) => {
   if (!_.isEmpty(extraParameters)) {
     throw new Error(`Unexpected extra parameter(s) [${_.keys(extraParameters).join(',')}]`);
   }
-
-  const isIntegerRule = [_.isInteger, 'must be an integer'];
-  const isPositiveRule = [(value) => value > 0, 'must be greater than zero'];
-  const isNonNegativeRule = [(value) => value >= 0, 'must be greater than or equal to zero'];
-
-  const isPositiveRuleSet = [isPositiveRule];
-  const isPositiveIntegerRuleSet = [
-    isIntegerRule,
-    isPositiveRule,
-  ];
-  const isNonNegativeIntegerRuleSet = [
-    isIntegerRule,
-    isNonNegativeRule,
-  ];
-
-  const keyedRuleSets = {
-    innerWidth: isPositiveIntegerRuleSet,
-    innerDepth: isPositiveIntegerRuleSet,
-    outerHeight: isPositiveIntegerRuleSet,
-    sideLengthMultiple: isPositiveIntegerRuleSet,
-    minWallThickness: isPositiveRuleSet,
-    bottomThickness: isPositiveRuleSet,
-    minBottomHoleSideLength: isNonNegativeIntegerRuleSet,
-    bottomClearance: [
-      [(value) => _.isInteger(value) || value === Infinity, 'must be an integer or positive infinity'],
-      isPositiveRule,
-    ],
-  };
 
   _.forEach(keyedRuleSets, (ruleSet, parameterName) => {
     ruleSet.forEach(([test, rule]) => {
@@ -217,7 +204,25 @@ module.exports.makeContainer = ({
     minBottomHoleSideLength,
     bottomClearance,
   };
-  validateParameters(parameters, extraParameters);
+
+  const isValidInnerDimensionRuleSet = [
+    ...isPositiveIntegerRuleSet,
+    [buildIsGreaterThanN(minBottomHoleSideLength), 'must be greater than minBottomHoleSideLength'],
+  ];
+
+  validateParameters(parameters, extraParameters, {
+    innerWidth: isValidInnerDimensionRuleSet,
+    innerDepth: isValidInnerDimensionRuleSet,
+    outerHeight: isPositiveIntegerRuleSet,
+    sideLengthMultiple: isPositiveIntegerRuleSet,
+    minWallThickness: isPositiveRuleSet,
+    bottomThickness: isPositiveRuleSet,
+    minBottomHoleSideLength: isNonNegativeIntegerRuleSet,
+    bottomClearance: [
+      [(value) => _.isInteger(value) || value === Infinity, 'must be an integer or positive infinity'],
+      isPositiveRule,
+    ],
+  });
 
   return [
     calculateDimensions,

@@ -71,6 +71,37 @@ describe('makeContainer', function () {
         itThrowsAnError(parameterName, 'must be greater than or equal to zero', -1);
       });
     });
+
+    [
+      'innerWidth',
+      'innerDepth',
+    ].forEach((parameterName) => {
+      context(`when "${parameterName}" is equal to minBottomHoleSideLength`, function () {
+        it('throws an error', function () {
+          const testFn = () => {
+            makeContainer({
+              [parameterName]: 1,
+              minBottomHoleSideLength: 2,
+            });
+          };
+
+          expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
+        });
+      });
+
+      context(`when "${parameterName}" is less than minBottomHoleSideLength`, function () {
+        it('throws an error', function () {
+          const testFn = () => {
+            makeContainer({
+              [parameterName]: 1,
+              minBottomHoleSideLength: 1,
+            });
+          };
+
+          expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
+        });
+      });
+    });
   });
 
   context('by default', function () {

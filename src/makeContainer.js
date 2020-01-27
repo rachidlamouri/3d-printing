@@ -46,27 +46,35 @@ const calculateDimensions = ({
   outerHeight,
   sideLengthMultiple,
   minWallThickness,
+  wallThickness,
+  isWallThicknessSet,
   bottomThickness,
   minBottomHoleSideLength,
   bottomClearance,
 }) => {
-  const minOuterWidth = innerWidth + 2 * minWallThickness;
-  const minOuterDepth = innerDepth + 2 * minWallThickness;
+  const wallThicknessToUse = isWallThicknessSet ? wallThickness : minWallThickness;
+  const minOuterWidth = innerWidth + 2 * wallThicknessToUse;
+  const minOuterDepth = innerDepth + 2 * wallThicknessToUse;
   const outerWidth = getNextMultiple(minOuterWidth, sideLengthMultiple);
   const outerDepth = getNextMultiple(minOuterDepth, sideLengthMultiple);
 
+  const adjustedInnerWidth = isWallThicknessSet ? outerWidth - 2 * wallThickness : innerWidth;
+  const adjustedInnerDepth = isWallThicknessSet ? outerDepth - 2 * wallThickness : innerDepth;
+
   return {
+    innerWidth: adjustedInnerWidth,
+    innerDepth: adjustedInnerDepth,
     innerHeight: outerHeight - bottomThickness,
     outerWidth,
     outerDepth,
-    widthWallThickness: (outerWidth - innerWidth) / 2,
-    depthWallThickness: (outerDepth - innerDepth) / 2,
+    widthWallThickness: (outerWidth - adjustedInnerWidth) / 2,
+    depthWallThickness: (outerDepth - adjustedInnerDepth) / 2,
     bottomHoleWidth: Math.max(
-      innerWidth - 2 * bottomClearance,
+      adjustedInnerWidth - 2 * bottomClearance,
       minBottomHoleSideLength,
     ),
     bottomHoleDepth: Math.max(
-      innerDepth - 2 * bottomClearance,
+      adjustedInnerDepth - 2 * bottomClearance,
       minBottomHoleSideLength,
     ),
   };
@@ -189,6 +197,7 @@ module.exports.makeContainer = ({
   outerHeight = 20,
   sideLengthMultiple = 2,
   minWallThickness = 1,
+  wallThickness = null,
   bottomThickness = 1,
   minBottomHoleSideLength = 5,
   bottomClearance = 16,
@@ -200,6 +209,8 @@ module.exports.makeContainer = ({
     outerHeight,
     sideLengthMultiple,
     minWallThickness,
+    wallThickness,
+    isWallThicknessSet: wallThickness !== null,
     bottomThickness,
     minBottomHoleSideLength,
     bottomClearance,

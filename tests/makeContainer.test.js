@@ -147,6 +147,62 @@ describe('makeContainer', function () {
     });
   });
 
+  context('when the sideLengthMultiple and minWallThickness are set', function () {
+    it('adjusts the wall thicknesses to respect the sideLengthMultiple', function () {
+      const { wallThicknessSizes } = makeContainer({
+        innerWidth: 11,
+        innerDepth: 11,
+        sideLengthMultiple: 2,
+        minWallThickness: 1,
+      }).debug;
+
+      expect(wallThicknessSizes).to.eql([
+        1.5,
+        1.5,
+        1,
+      ]);
+    });
+  });
+
+  context('when wallThickness is set', function () {
+    before(function () {
+      this.debug = makeContainer({
+        innerWidth: 11,
+        innerDepth: 11,
+        outerHeight: 10,
+        bottomThickness: 1,
+        bottomClearance: 1,
+        sideLengthMultiple: 2,
+        minWallThickness: 1,
+        wallThickness: 1,
+      }).debug;
+    });
+
+    it('respects the wallThickness', function () {
+      expect(this.debug.wallThicknessSizes).to.eql([
+        1,
+        1,
+        1,
+      ]);
+    });
+
+    it('adjusts the inner dimensions to respect the sideLengthMultiple', function () {
+      expect(this.debug.innerBoxSize).to.eql([
+        12,
+        12,
+        9,
+      ]);
+    });
+
+    it('adjusts the bottom hole dimensions based on the new inner dimensions', function () {
+      expect(this.debug.bottomHoleSize).to.eql([
+        10,
+        10,
+        1,
+      ]);
+    });
+  });
+
   context('when the bottomClearance is Infinity and the minBottomHoleSideLength is zero', function () {
     it('does not make a bottom hole', function () {
       const { bottomHoleSize } = makeContainer({

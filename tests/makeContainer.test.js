@@ -129,13 +129,13 @@ describe('makeContainer', function () {
           19,
         ],
         outerBoxSize: [
-          24,
-          24,
+          22,
+          22,
           20,
         ],
         wallThicknessSizes: [
-          2,
-          2,
+          1,
+          1,
           1,
         ],
         bottomHoleSize: [

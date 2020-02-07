@@ -1,42 +1,60 @@
 const { expect } = require('chai');
 const { makeContainer } = require('../src/makeContainer');
+const {
+  buildBehaviorsFor,
+  itThrowsAnErrorWhenCalledWithExtraParameters,
+} = require('./helpers/behaviors');
+
+const {
+  theyMustBeIntegers,
+  theyMustBeGreaterThanZero,
+  theyMustBeGreaterThanOrEqualToZero,
+} = buildBehaviorsFor(makeContainer);
 
 describe('makeContainer', function () {
   describe('parameter validation', function () {
-    const itThrowsAnError = (parameterName, statement, testValue) => {
-      it('throws an error', function () {
-        const testFn = () => {
-          makeContainer({ [parameterName]: testValue });
-        };
+    const theyMustBeGreatThanMinBottomHoleSideLength = (...parameterNames) => {
+      parameterNames.forEach((parameterName) => {
+        context(`when "${parameterName}" is equal to minBottomHoleSideLength`, function () {
+          it('throws an error', function () {
+            const testFn = () => {
+              makeContainer({
+                [parameterName]: 1,
+                minBottomHoleSideLength: 2,
+              });
+            };
 
-        expect(testFn).to.throw(`${parameterName} ${statement}`);
+            expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
+          });
+        });
+
+        context(`when "${parameterName}" is less than minBottomHoleSideLength`, function () {
+          it('throws an error', function () {
+            const testFn = () => {
+              makeContainer({
+                [parameterName]: 1,
+                minBottomHoleSideLength: 1,
+              });
+            };
+
+            expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
+          });
+        });
       });
     };
 
-    context('with extra parameters', function () {
-      it('throws an error', function () {
-        const testFn = () => {
-          makeContainer({ extra1: 2, extra2: 'a' });
-        };
+    itThrowsAnErrorWhenCalledWithExtraParameters(makeContainer);
 
-        expect(testFn).to.throw('Unexpected extra parameter(s) [extra1,extra2]');
-      });
-    });
-
-    [
+    theyMustBeIntegers(
       'innerWidth',
       'innerDepth',
       'outerHeight',
       'sideLengthMultiple',
       'minBottomHoleSideLength',
       'bottomClearance',
-    ].forEach((parameterName) => {
-      context(`when "${parameterName}" is not an integer`, function () {
-        itThrowsAnError(parameterName, 'must be an integer', 0.1);
-      });
-    });
+    );
 
-    [
+    theyMustBeGreaterThanZero(
       'innerWidth',
       'innerDepth',
       'outerHeight',
@@ -44,64 +62,16 @@ describe('makeContainer', function () {
       'minWallThickness',
       'bottomThickness',
       'bottomClearance',
-    ].forEach((parameterName) => {
-      context(`when "${parameterName}" is zero`, function () {
-        itThrowsAnError(parameterName, 'must be greater than zero', 0);
-      });
-    });
+    );
 
-    [
-      'innerWidth',
-      'innerDepth',
-      'outerHeight',
-      'sideLengthMultiple',
-      'minWallThickness',
-      'bottomThickness',
-      'bottomClearance',
-    ].forEach((parameterName) => {
-      context(`when "${parameterName}" is negative`, function () {
-        itThrowsAnError(parameterName, 'must be greater than zero', -1);
-      });
-    });
-
-    [
+    theyMustBeGreaterThanOrEqualToZero(
       'minBottomHoleSideLength',
-    ].forEach((parameterName) => {
-      context(`when "${parameterName}" is negative`, function () {
-        itThrowsAnError(parameterName, 'must be greater than or equal to zero', -1);
-      });
-    });
+    );
 
-    [
+    theyMustBeGreatThanMinBottomHoleSideLength(
       'innerWidth',
       'innerDepth',
-    ].forEach((parameterName) => {
-      context(`when "${parameterName}" is equal to minBottomHoleSideLength`, function () {
-        it('throws an error', function () {
-          const testFn = () => {
-            makeContainer({
-              [parameterName]: 1,
-              minBottomHoleSideLength: 2,
-            });
-          };
-
-          expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
-        });
-      });
-
-      context(`when "${parameterName}" is less than minBottomHoleSideLength`, function () {
-        it('throws an error', function () {
-          const testFn = () => {
-            makeContainer({
-              [parameterName]: 1,
-              minBottomHoleSideLength: 1,
-            });
-          };
-
-          expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
-        });
-      });
-    });
+    );
   });
 
   context('by default', function () {

@@ -1,44 +1,17 @@
 const _ = require('lodash');
-
-const sizeToMeta = (size) => {
-  const [width, depth, height] = size;
-  return {
-    size,
-    width,
-    depth,
-    height,
-  };
-};
-const getNextMultiple = (value, multiplier) => Math.ceil(value / multiplier) * multiplier;
-
-const buildIsGreaterThanN = (n) => (value) => value > n;
-const isIntegerRule = [_.isInteger, 'must be an integer'];
-const isPositiveRule = [(value) => value > 0, 'must be greater than zero'];
-const isNonNegativeRule = [(value) => value >= 0, 'must be greater than or equal to zero'];
-
-const isPositiveRuleSet = [isPositiveRule];
-const isPositiveIntegerRuleSet = [
-  isIntegerRule,
+const {
+  sizeToMeta,
+  getNextMultiple,
+  assembleMeta,
+} = require('./lib/utils');
+const {
+  buildIsGreaterThanN,
   isPositiveRule,
-];
-const isNonNegativeIntegerRuleSet = [
-  isIntegerRule,
-  isNonNegativeRule,
-];
-
-const validateParameters = (parameters, extraParameters, keyedRuleSets) => {
-  if (!_.isEmpty(extraParameters)) {
-    throw new Error(`Unexpected extra parameter(s) [${_.keys(extraParameters).join(',')}]`);
-  }
-
-  _.forEach(keyedRuleSets, (ruleSet, parameterName) => {
-    ruleSet.forEach(([test, rule]) => {
-      if (!test(parameters[parameterName])) {
-        throw new Error(`${parameterName} ${rule}`);
-      }
-    });
-  });
-};
+  isPositiveRuleSet,
+  isPositiveIntegerRuleSet,
+  isNonNegativeIntegerRuleSet,
+  validateParameters,
+} = require('./lib/validation');
 
 const calculateDimensions = ({
   innerWidth,
@@ -235,18 +208,13 @@ module.exports.makeContainer = ({
     ],
   });
 
-  return [
+  return assembleMeta(
+    parameters,
     calculateDimensions,
     createOuterBox,
     createInnerBox,
     createBottomHole,
     createContainer,
     createDebug,
-  ].reduce(
-    (meta, assembler) => ({
-      ...meta,
-      ...assembler(meta),
-    }),
-    parameters,
   );
 };

@@ -10,5 +10,6 @@ Object.assign(
     OpenJscadObject,
     cube: () => new OpenJscadObject(),
     difference: () => new OpenJscadObject(),
+    union: () => new OpenJscadObject(),
   },
 );

@@ -211,7 +211,7 @@ module.exports.makeContainer = ({
     isWallThicknessSet: requiredBoolean(),
     bottomThickness: requiredPositiveNumber(),
     minBottomHoleSideLength: requiredNonNegativeInteger(),
-    bottomClearance: requiredPositiveNumber().allow(Infinity),
+    bottomClearance: requiredNonNegativeInteger().allow(Infinity),
   });
 
   return assembleMeta(

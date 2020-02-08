@@ -37,11 +37,11 @@ describe('makeContainer', function () {
       'minWallThickness',
       'wallThickness',
       'bottomThickness',
-      'bottomClearance',
     );
 
     theyMustBeNonNegativeIntegers(
       'minBottomHoleSideLength',
+      'bottomClearance',
     );
   });
 

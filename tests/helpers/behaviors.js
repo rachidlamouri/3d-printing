@@ -1,53 +1,60 @@
 const _ = require('lodash');
 const { expect } = require('chai');
 
-const buildItThrowsAnErrorFor = (fn) => (parameterName, statement, testValue) => {
+const buildItThrowsAnErrorForFunction = (fn) => (parameterName, assertionErrorStatement, badTestValue, otherParameters = {}) => {
   it('throws an error', function () {
     const testFn = () => {
-      fn({ [parameterName]: testValue });
+      fn({
+        [parameterName]: badTestValue,
+        ...otherParameters,
+      });
     };
 
-    expect(testFn).to.throw(`${parameterName} ${statement}`);
+    expect(testFn).to.throw(`"${parameterName}" ${assertionErrorStatement}`);
   });
 };
 
-const buildTestBehavior = (
-  contextStatement,
-  assertionErrorStatement,
-  badTestValue,
-  itThrowsAnError,
-) => (...parameterNames) => {
+const buildTheyMustBeSomethingForContextTuples = (...contextTuples) => (itThrowsAnErrorForParameters) => (...parameterNames) => {
   parameterNames.forEach((parameterName) => {
-    context(`when "${parameterName}" ${contextStatement}`, function () {
-      itThrowsAnError(parameterName, assertionErrorStatement, badTestValue);
+    describe(parameterName, function () {
+      contextTuples.forEach(([contextStatement, assertionErrorStatement, badTestValue, otherParameters]) => {
+        context(`when ${contextStatement}`, function () {
+          itThrowsAnErrorForParameters(parameterName, assertionErrorStatement, badTestValue, otherParameters);
+        });
+      });
     });
   });
 };
 
-const buildTheyMustForContext = _.curry(buildTestBehavior);
+const whenNegativeContextTuple = (assertionErrorStatement = 'must be a positive number') => ['negative', assertionErrorStatement, -1];
+const whenZeroContextTuple = ['zero', 'must be a positive number', 0];
+const whenNotAnIntegerContextTuple = ['not an integer', 'must be an integer', 0.1];
 
-const buildTheyMustBeIntegersForItThrowsAnError = buildTheyMustForContext('is not an integer', 'must be an integer', 0.1);
-const buildTheyMustBeGreaterThanZeroForItThrowsAnError = (itThrowsAnError) => {
-  const itMustBeGreaterThanZero = buildTestBehavior('is zero', 'must be greater than zero', 0, itThrowsAnError);
-  const itMustBeGreaterThanZeroForNegative = buildTestBehavior('is negative', 'must be greater than zero', -1, itThrowsAnError);
+const buildTheyMustBePositiveIntegersForItThrowsAnError = buildTheyMustBeSomethingForContextTuples(
+  whenNegativeContextTuple(),
+  whenZeroContextTuple,
+  whenNotAnIntegerContextTuple,
+);
 
-  return (...parameterNames) => {
-    parameterNames.forEach((parameterName) => {
-      itMustBeGreaterThanZero(parameterName);
-      itMustBeGreaterThanZeroForNegative(parameterName);
-    });
-  };
-};
-const buildTheyMustBeGreaterThanOrEqualToZeroForItThrowsAnError = buildTheyMustForContext('is negative', 'must be greater than or equal to zero', -1);
+const buildTheyMustBePositiveNumbersForItThrowsAnError = buildTheyMustBeSomethingForContextTuples(
+  whenNegativeContextTuple(),
+  whenZeroContextTuple,
+);
 
-const buildBehaviorsFor = (fn) => {
-  const itThrowsAnError = buildItThrowsAnErrorFor(fn);
+const buildTheyMustBeNonNegativeIntegersForItThrowsAnError = buildTheyMustBeSomethingForContextTuples(
+  whenNegativeContextTuple('must be larger than or equal to 0'),
+  whenNotAnIntegerContextTuple,
+);
+
+const buildBehaviorsForFunction = (fn, customBehaviors = {}) => {
+  const itThrowsAnErrorForParameters = buildItThrowsAnErrorForFunction(fn);
 
   return _.reduce(
     {
-      buildTheyMustBeIntegersForItThrowsAnError,
-      buildTheyMustBeGreaterThanZeroForItThrowsAnError,
-      buildTheyMustBeGreaterThanOrEqualToZeroForItThrowsAnError,
+      buildTheyMustBePositiveIntegersForItThrowsAnError,
+      buildTheyMustBePositiveNumbersForItThrowsAnError,
+      buildTheyMustBeNonNegativeIntegersForItThrowsAnError,
+      ...customBehaviors,
     },
     (behaviors, buildTheyMustBeSomethingForItThrowsAnError, functionName) => {
       const behaviorName = _.lowerFirst(
@@ -57,7 +64,7 @@ const buildBehaviorsFor = (fn) => {
       );
 
       // eslint-disable-next-line no-param-reassign
-      behaviors[behaviorName] = buildTheyMustBeSomethingForItThrowsAnError(itThrowsAnError);
+      behaviors[behaviorName] = buildTheyMustBeSomethingForItThrowsAnError(itThrowsAnErrorForParameters);
       return behaviors;
     },
     {},
@@ -71,12 +78,15 @@ const itThrowsAnErrorWhenCalledWithExtraParameters = (fn) => {
         fn({ extra1: 2, extra2: 'a' });
       };
 
-      expect(testFn).to.throw('Unexpected extra parameter(s) [extra1,extra2]');
+      expect(testFn).to.throw(/"extra1" is not allowed/);
+      expect(testFn).to.throw(/"extra2" is not allowed/);
     });
   });
 };
 
 module.exports = {
-  buildBehaviorsFor,
+  buildBehaviorsForFunction,
+  buildTheyMustBeSomethingForContextTuples,
+  whenNotAnIntegerContextTuple,
   itThrowsAnErrorWhenCalledWithExtraParameters,
 };

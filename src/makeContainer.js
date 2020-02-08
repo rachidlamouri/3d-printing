@@ -1,15 +1,14 @@
-const _ = require('lodash');
+const Joi = require('@hapi/joi');
 const {
   sizeToMeta,
   getNextMultiple,
   assembleMeta,
 } = require('./lib/utils');
 const {
-  buildIsGreaterThanN,
-  isPositiveRule,
-  isPositiveRuleSet,
-  isPositiveIntegerRuleSet,
-  isNonNegativeIntegerRuleSet,
+  requiredPositiveInteger,
+  requiredPositiveNumber,
+  requiredNonNegativeInteger,
+  requiredBoolean,
   validateParameters,
 } = require('./lib/validation');
 
@@ -189,23 +188,19 @@ module.exports.makeContainer = ({
     bottomClearance,
   };
 
-  const isValidInnerDimensionRuleSet = [
-    ...isPositiveIntegerRuleSet,
-    [buildIsGreaterThanN(minBottomHoleSideLength), 'must be greater than minBottomHoleSideLength'],
-  ];
+  const requiredInnerDimension = () => Joi.number().integer().greater(Joi.ref('minBottomHoleSideLength')).required();
 
   validateParameters(parameters, extraParameters, {
-    innerWidth: isValidInnerDimensionRuleSet,
-    innerDepth: isValidInnerDimensionRuleSet,
-    outerHeight: isPositiveIntegerRuleSet,
-    sideLengthMultiple: isPositiveIntegerRuleSet,
-    minWallThickness: isPositiveRuleSet,
-    bottomThickness: isPositiveRuleSet,
-    minBottomHoleSideLength: isNonNegativeIntegerRuleSet,
-    bottomClearance: [
-      [(value) => _.isInteger(value) || value === Infinity, 'must be an integer or positive infinity'],
-      isPositiveRule,
-    ],
+    innerWidth: requiredInnerDimension(),
+    innerDepth: requiredInnerDimension(),
+    outerHeight: requiredPositiveInteger(),
+    sideLengthMultiple: requiredPositiveInteger(),
+    minWallThickness: requiredPositiveNumber(),
+    wallThickness: requiredPositiveNumber().allow(null),
+    isWallThicknessSet: requiredBoolean(),
+    bottomThickness: requiredPositiveNumber(),
+    minBottomHoleSideLength: requiredNonNegativeInteger(),
+    bottomClearance: requiredPositiveNumber().allow(Infinity),
   });
 
   return assembleMeta(

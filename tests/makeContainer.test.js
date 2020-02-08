@@ -1,76 +1,48 @@
 const { expect } = require('chai');
 const { makeContainer } = require('../src/makeContainer');
 const {
-  buildBehaviorsFor,
+  buildBehaviorsForFunction,
+  buildTheyMustBeSomethingForContextTuples,
+  whenNotAnIntegerContextTuple,
   itThrowsAnErrorWhenCalledWithExtraParameters,
 } = require('./helpers/behaviors');
 
 const {
-  theyMustBeIntegers,
-  theyMustBeGreaterThanZero,
-  theyMustBeGreaterThanOrEqualToZero,
-} = buildBehaviorsFor(makeContainer);
+  theyMustBePositiveIntegers,
+  theyMustBePositiveNumbers,
+  theyMustBeNonNegativeIntegers,
+  theyMustBeValidInnerDimensions,
+} = buildBehaviorsForFunction(makeContainer, {
+  theyMustBeValidInnerDimensionsForItThrowsAnError: buildTheyMustBeSomethingForContextTuples(
+    whenNotAnIntegerContextTuple,
+    ['equal to minBottomHoleSideLength', 'must be greater than ref:minBottomHoleSideLength', 1, { minBottomHoleSideLength: 1 }],
+    ['less than minBottomHoleSideLength', 'must be greater than ref:minBottomHoleSideLength', 1, { minBottomHoleSideLength: 2 }],
+  ),
+});
 
 describe('makeContainer', function () {
   describe('parameter validation', function () {
-    const theyMustBeGreatThanMinBottomHoleSideLength = (...parameterNames) => {
-      parameterNames.forEach((parameterName) => {
-        context(`when "${parameterName}" is equal to minBottomHoleSideLength`, function () {
-          it('throws an error', function () {
-            const testFn = () => {
-              makeContainer({
-                [parameterName]: 1,
-                minBottomHoleSideLength: 2,
-              });
-            };
-
-            expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
-          });
-        });
-
-        context(`when "${parameterName}" is less than minBottomHoleSideLength`, function () {
-          it('throws an error', function () {
-            const testFn = () => {
-              makeContainer({
-                [parameterName]: 1,
-                minBottomHoleSideLength: 1,
-              });
-            };
-
-            expect(testFn).to.throw(`${parameterName} must be greater than minBottomHoleSideLength`);
-          });
-        });
-      });
-    };
-
     itThrowsAnErrorWhenCalledWithExtraParameters(makeContainer);
 
-    theyMustBeIntegers(
+    theyMustBeValidInnerDimensions(
       'innerWidth',
       'innerDepth',
-      'outerHeight',
-      'sideLengthMultiple',
-      'minBottomHoleSideLength',
-      'bottomClearance',
     );
 
-    theyMustBeGreaterThanZero(
-      'innerWidth',
-      'innerDepth',
+    theyMustBePositiveIntegers(
       'outerHeight',
       'sideLengthMultiple',
+    );
+
+    theyMustBePositiveNumbers(
       'minWallThickness',
+      'wallThickness',
       'bottomThickness',
       'bottomClearance',
     );
 
-    theyMustBeGreaterThanOrEqualToZero(
+    theyMustBeNonNegativeIntegers(
       'minBottomHoleSideLength',
-    );
-
-    theyMustBeGreatThanMinBottomHoleSideLength(
-      'innerWidth',
-      'innerDepth',
     );
   });
 

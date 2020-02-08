@@ -1,41 +1,34 @@
-const _ = require('lodash');
+const Joi = require('@hapi/joi');
 
-const buildIsGreaterThanN = (n) => (value) => value > n;
-const isIntegerRule = [_.isInteger, 'must be an integer'];
-const isPositiveRule = [(value) => value > 0, 'must be greater than zero'];
-const isNonNegativeRule = [(value) => value >= 0, 'must be greater than or equal to zero'];
+const positiveInteger = () => Joi.number().integer().positive();
+const positiveNumber = () => Joi.number().positive();
+const nonNegativeInteger = () => Joi.number().integer().min(0);
+const boolean = () => Joi.boolean();
 
-const isPositiveRuleSet = [isPositiveRule];
-const isPositiveIntegerRuleSet = [
-  isIntegerRule,
-  isPositiveRule,
-];
-const isNonNegativeIntegerRuleSet = [
-  isIntegerRule,
-  isNonNegativeRule,
-];
+const [
+  requiredPositiveInteger,
+  requiredPositiveNumber,
+  requiredNonNegativeInteger,
+  requiredBoolean,
+] = [
+  positiveInteger,
+  positiveNumber,
+  nonNegativeInteger,
+  boolean,
+].map((generateSchema) => () => generateSchema().required());
 
-const validateParameters = (parameters, extraParameters, keyedRuleSets) => {
-  if (!_.isEmpty(extraParameters)) {
-    throw new Error(`Unexpected extra parameter(s) [${_.keys(extraParameters).join(',')}]`);
-  }
-
-  _.forEach(keyedRuleSets, (ruleSet, parameterName) => {
-    ruleSet.forEach(([test, rule]) => {
-      if (!test(parameters[parameterName])) {
-        throw new Error(`${parameterName} ${rule}`);
-      }
-    });
-  });
+const validateParameters = (parameters = {}, extraParameters = {}, parametersPropertySchemas = {}) => {
+  Joi.assert(
+    { ...parameters, ...extraParameters },
+    Joi.object(parametersPropertySchemas),
+    { abortEarly: false },
+  );
 };
 
 module.exports = {
-  buildIsGreaterThanN,
-  isIntegerRule,
-  isPositiveRule,
-  isNonNegativeRule,
-  isPositiveRuleSet,
-  isPositiveIntegerRuleSet,
-  isNonNegativeIntegerRuleSet,
+  requiredPositiveInteger,
+  requiredPositiveNumber,
+  requiredNonNegativeInteger,
+  requiredBoolean,
   validateParameters,
 };

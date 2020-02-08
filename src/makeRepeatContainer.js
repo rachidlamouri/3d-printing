@@ -1,5 +1,7 @@
+const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const {
+  requiredPositiveInteger,
   validateParameters,
 } = require('./lib/validation');
 const {
@@ -53,7 +55,12 @@ module.exports.makeRepeatContainer = ({
     count,
   };
 
-  validateParameters(parameters, extraParameters);
+  validateParameters(parameters, extraParameters, {
+    innerWidth: Joi.any(),
+    innerDepth: Joi.any(),
+    outerHeight: Joi.any(),
+    count: requiredPositiveInteger(),
+  });
 
   return assembleMeta(
     parameters,

@@ -26,5 +26,36 @@ describe('makeRepeatContainer', function () {
     it('returns the container', function () {
       expect(this.containerMeta.container).to.be.an.instanceof(OpenJscadObject);
     });
+
+    it('returns debug information', function () {
+      expect(this.containerMeta.debug).to.eql({
+        startingOuterSize: [
+          43,
+          22,
+          20,
+        ],
+      });
+    });
+  });
+
+  context('with decimal inner dimensions', function () {
+    before(function () {
+      this.debug = makeRepeatContainer({
+        innerWidth: 6.7,
+        innerDepth: 6.2,
+        outerHeight: 10,
+        count: 2,
+      }).debug;
+    });
+
+    it('ignores the side length multiple for the starting outer size', function () {
+      expect(this.debug.startingOuterSize).to.eql([
+        16.4,
+        8.2,
+        10,
+      ]);
+    });
+
+    xit('updates the final outer width to respect the sideLengthMultiple');
   });
 });

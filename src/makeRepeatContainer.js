@@ -16,35 +16,51 @@ const createContainers = ({
   count,
 }) => {
   const wallThickness = 1;
+  let startingOuterSize;
 
   const repeatedContainer = union(
     ..._.range(count).map((index) => {
-      const { container, outerWidth } = makeContainer({
+      const {
+        container,
+        outerWidth,
+        outerDepth,
+      } = makeContainer({
         innerWidth,
         innerDepth,
         outerHeight,
-        sideLengthMultiple: 1,
+        sideLengthMultiple: null,
         wallThickness,
       });
 
-      const xOffset = (index * outerWidth) - ((index - 1) * wallThickness);
+      const xOffset = (
+        index === 0
+          ? 0
+          : (index * outerWidth) - (index * wallThickness)
+      );
+      startingOuterSize = [xOffset + outerWidth, outerDepth, outerHeight];
+
       return container.translate([xOffset, 0, 0]);
     }),
   );
 
   return {
+    startingOuterSize,
     container: repeatedContainer,
   };
 };
 
-const createDebug = () => ({
-  debug: {},
+const createDebug = ({
+  startingOuterSize,
+}) => ({
+  debug: {
+    startingOuterSize,
+  },
 });
 
 module.exports.makeRepeatContainer = ({
-  innerWidth,
-  innerDepth,
-  outerHeight,
+  innerWidth = 20,
+  innerDepth = 20,
+  outerHeight = 20,
   count = 2,
   ...extraParameters
 } = {}) => {

@@ -182,6 +182,7 @@ module.exports.makeContainer = ({
   bottomThickness = 1,
   minBottomHoleSideLength = 5,
   bottomClearance = 16,
+  ignoreDecimalPrecision = false,
   ...extraParameters
 } = {}) => {
   const parameters = {
@@ -196,6 +197,7 @@ module.exports.makeContainer = ({
     bottomThickness,
     minBottomHoleSideLength,
     bottomClearance,
+    ignoreDecimalPrecision,
   };
 
   const requiredInnerDimension = () => Joi.number().precision(1).greater(Joi.ref('minBottomHoleSideLength')).required();
@@ -212,6 +214,7 @@ module.exports.makeContainer = ({
     bottomThickness: requiredPositiveNumber(),
     minBottomHoleSideLength: requiredNonNegativeInteger(),
     bottomClearance: requiredNonNegativeInteger().allow(Infinity),
+    ignoreDecimalPrecision: requiredBoolean,
   });
 
   return assembleMeta(

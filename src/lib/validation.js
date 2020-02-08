@@ -1,4 +1,5 @@
 const Joi = require('@hapi/joi');
+const _ = require('lodash');
 
 const positiveInteger = () => Joi.number().integer().positive();
 const positiveNumber = () => Joi.number().positive();
@@ -18,12 +19,14 @@ const [
 ].map((generateSchema) => () => generateSchema().required());
 
 const validateParameters = (parameters = {}, extraParameters = {}, parametersPropertySchemas = {}) => {
+  const ignoreDecimalPrecision = _.get(parameters, 'ignoreDecimalPrecision', false);
+
   Joi.assert(
     { ...parameters, ...extraParameters },
     Joi.object(parametersPropertySchemas),
     {
       abortEarly: false,
-      convert: false,
+      convert: ignoreDecimalPrecision,
     },
   );
 };

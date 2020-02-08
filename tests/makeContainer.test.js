@@ -196,4 +196,18 @@ describe('makeContainer', function () {
       });
     });
   });
+
+  context('when ignoreDecimalPrecision is true', function () {
+    it('does not throw an error for excessive decimals', function () {
+      const testFn1 = () => {
+        makeContainer({ innerWidth: 20.33333333 });
+      };
+      const testFn2 = () => {
+        makeContainer({ innerWidth: 20.33333333, ignoreDecimalPrecision: true });
+      };
+
+      expect(testFn1).to.throw(/must have no more than 1 decimal places/);
+      expect(testFn2).to.not.throw();
+    });
+  });
 });

@@ -34,6 +34,11 @@ describe('makeRepeatContainer', function () {
           22,
           20,
         ],
+        finalOuterSize: [
+          43,
+          22,
+          20,
+        ],
       });
     });
   });
@@ -55,7 +60,33 @@ describe('makeRepeatContainer', function () {
         10,
       ]);
     });
+  });
 
-    xit('updates the final outer width to respect the sideLengthMultiple');
+  context('with sideLengthMultiple', function () {
+    before(function () {
+      this.debug = makeRepeatContainer({
+        innerWidth: 6.7,
+        innerDepth: 6.2,
+        outerHeight: 12,
+        sideLengthMultiple: 5,
+        count: 2,
+      }).debug;
+    });
+
+    it('ignores the sideLengthMultiple for the startingOuterSize', function () {
+      expect(this.debug.startingOuterSize).to.eql([
+        16.4,
+        8.2,
+        12,
+      ]);
+    });
+
+    it('adjusts the outer dimensions to respect the sideLengthMultiple', function () {
+      expect(this.debug.finalOuterSize).to.eql([
+        20,
+        15,
+        12,
+      ]);
+    });
   });
 });

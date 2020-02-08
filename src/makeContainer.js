@@ -198,7 +198,7 @@ module.exports.makeContainer = ({
     bottomClearance,
   };
 
-  const requiredInnerDimension = () => Joi.number().integer().greater(Joi.ref('minBottomHoleSideLength')).required();
+  const requiredInnerDimension = () => Joi.number().precision(1).greater(Joi.ref('minBottomHoleSideLength')).required();
 
   validateParameters(parameters, extraParameters, {
     innerWidth: requiredInnerDimension(),

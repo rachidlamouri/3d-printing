@@ -21,7 +21,10 @@ const validateParameters = (parameters = {}, extraParameters = {}, parametersPro
   Joi.assert(
     { ...parameters, ...extraParameters },
     Joi.object(parametersPropertySchemas),
-    { abortEarly: false },
+    {
+      abortEarly: false,
+      convert: false,
+    },
   );
 };
 

@@ -3,7 +3,6 @@ const { makeContainer } = require('../src/makeContainer');
 const {
   buildBehaviorsForFunction,
   buildTheyMustBeSomethingForContextTuples,
-  whenNotAnIntegerContextTuple,
   itThrowsAnErrorWhenCalledWithExtraParameters,
 } = require('./helpers/behaviors');
 
@@ -14,9 +13,9 @@ const {
   theyMustBeValidInnerDimensions,
 } = buildBehaviorsForFunction(makeContainer, {
   theyMustBeValidInnerDimensionsForItThrowsAnError: buildTheyMustBeSomethingForContextTuples(
-    whenNotAnIntegerContextTuple,
     ['equal to minBottomHoleSideLength', 'must be greater than ref:minBottomHoleSideLength', 1, { minBottomHoleSideLength: 1 }],
     ['less than minBottomHoleSideLength', 'must be greater than ref:minBottomHoleSideLength', 1, { minBottomHoleSideLength: 2 }],
+    ['the decimal precision is greater than 1', 'must have no more than 1 decimal places', 1.23, { minBottomHoleSideLength: 1 }],
   ),
 });
 

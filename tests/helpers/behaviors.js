@@ -87,6 +87,5 @@ const itThrowsAnErrorWhenCalledWithExtraParameters = (fn) => {
 module.exports = {
   buildBehaviorsForFunction,
   buildTheyMustBeSomethingForContextTuples,
-  whenNotAnIntegerContextTuple,
   itThrowsAnErrorWhenCalledWithExtraParameters,
 };

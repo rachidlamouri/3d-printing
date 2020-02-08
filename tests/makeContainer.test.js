@@ -158,4 +158,43 @@ describe('makeContainer', function () {
       ]);
     });
   });
+
+  context('when sideLengthMultiple is null', function () {
+    context('and the wallThickness is not set', function () {
+      it('uses the minWallThickness to calculate the outer dimensions', function () {
+        const { outerBoxSize } = makeContainer({
+          innerWidth: 11,
+          innerDepth: 7,
+          outerHeight: 10,
+          minWallThickness: 5,
+          sideLengthMultiple: null,
+        }).debug;
+
+        expect(outerBoxSize).to.eql([
+          21,
+          17,
+          10,
+        ]);
+      });
+    });
+
+    context('and the wallThickness is set', function () {
+      it('does not enforce a side length multiple', function () {
+        const { outerBoxSize } = makeContainer({
+          innerWidth: 11,
+          innerDepth: 7,
+          outerHeight: 10,
+          minWallThickness: 5,
+          wallThickness: 3,
+          sideLengthMultiple: null,
+        }).debug;
+
+        expect(outerBoxSize).to.eql([
+          17,
+          13,
+          10,
+        ]);
+      });
+    });
+  });
 });

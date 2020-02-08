@@ -17,6 +17,7 @@ const calculateDimensions = ({
   innerDepth,
   outerHeight,
   sideLengthMultiple,
+  isSideLengthMultipleSet,
   minWallThickness,
   wallThickness,
   isWallThicknessSet,
@@ -27,8 +28,16 @@ const calculateDimensions = ({
   const wallThicknessToUse = isWallThicknessSet ? wallThickness : minWallThickness;
   const minOuterWidth = innerWidth + 2 * wallThicknessToUse;
   const minOuterDepth = innerDepth + 2 * wallThicknessToUse;
-  const outerWidth = getNextMultiple(minOuterWidth, sideLengthMultiple);
-  const outerDepth = getNextMultiple(minOuterDepth, sideLengthMultiple);
+  const outerWidth = (
+    isSideLengthMultipleSet
+      ? getNextMultiple(minOuterWidth, sideLengthMultiple)
+      : minOuterWidth
+  );
+  const outerDepth = (
+    isSideLengthMultipleSet
+      ? getNextMultiple(minOuterDepth, sideLengthMultiple)
+      : minOuterDepth
+  );
 
   const adjustedInnerWidth = isWallThicknessSet ? outerWidth - 2 * wallThickness : innerWidth;
   const adjustedInnerDepth = isWallThicknessSet ? outerDepth - 2 * wallThickness : innerDepth;
@@ -180,6 +189,7 @@ module.exports.makeContainer = ({
     innerDepth,
     outerHeight,
     sideLengthMultiple,
+    isSideLengthMultipleSet: sideLengthMultiple !== null,
     minWallThickness,
     wallThickness,
     isWallThicknessSet: wallThickness !== null,
@@ -194,7 +204,8 @@ module.exports.makeContainer = ({
     innerWidth: requiredInnerDimension(),
     innerDepth: requiredInnerDimension(),
     outerHeight: requiredPositiveInteger(),
-    sideLengthMultiple: requiredPositiveInteger(),
+    sideLengthMultiple: requiredPositiveInteger().allow(null),
+    isSideLengthMultipleSet: requiredBoolean(),
     minWallThickness: requiredPositiveNumber(),
     wallThickness: requiredPositiveNumber().allow(null),
     isWallThicknessSet: requiredBoolean(),

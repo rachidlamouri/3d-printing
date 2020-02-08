@@ -2,9 +2,11 @@ const path = require('path');
 const glob = require('glob');
 const _ = require('lodash');
 
-const entries = _.keyBy(
-  glob.sync('./src/**/*.js'),
-  (filepath) => filepath.replace(/.\/src\//, '').replace(/\.js/, ''),
+const entries = (
+  _(glob.sync('./src/**/*.js'))
+    .keyBy((filepath) => filepath.replace(/.\/src\//, '').replace(/\.js/, ''))
+    .mapValues((filepath) => ['./src/lib/bootstrap', filepath])
+    .value()
 );
 
 module.exports = {

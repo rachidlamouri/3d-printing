@@ -3,6 +3,7 @@ const {
   sizeToMeta,
   getNextMultiple,
   assembleMeta,
+  buildBuildWithDefaults,
 } = require('./lib/utils');
 const {
   requiredPositiveInteger,
@@ -172,7 +173,7 @@ const createDebug = ({
   },
 });
 
-module.exports.makeContainer = ({
+const makeContainer = ({
   innerWidth = 20,
   innerDepth = 20,
   outerHeight = 20,
@@ -226,4 +227,9 @@ module.exports.makeContainer = ({
     createContainer,
     createDebug,
   );
+};
+
+module.exports = {
+  makeContainer,
+  buildMakeContainerWithDefaults: buildBuildWithDefaults(makeContainer),
 };

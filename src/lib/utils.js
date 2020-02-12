@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const sizeToMeta = (size) => {
   const [width, depth, height] = size;
   return {
@@ -19,8 +21,12 @@ const assembleMeta = (parameters, ...assemblerFunctions) => (
   )
 );
 
+const runWithDefaults = (entityFunction, defaults, parameters) => entityFunction({ ...defaults, ...parameters });
+const buildBuildWithDefaults = _.curry(runWithDefaults);
+
 module.exports = {
   sizeToMeta,
   getNextMultiple,
   assembleMeta,
+  buildBuildWithDefaults,
 };

@@ -42,6 +42,9 @@ describe('makeContainer', function () {
     theyMustBeNonNegativeIntegers(
       'minBottomHoleSideLength',
       'bottomClearance',
+      'baseClearance',
+      'xClearance',
+      'yClearance',
     );
   });
 
@@ -84,6 +87,10 @@ describe('makeContainer', function () {
           5,
           1,
         ],
+        xHoleSize: null,
+        xHolePosition: null,
+        yHoleSize: null,
+        yHolePosition: null,
       });
     });
   });
@@ -208,6 +215,49 @@ describe('makeContainer', function () {
 
       expect(testFn1).to.throw(/must have no more than 1 decimal places/);
       expect(testFn2).to.not.throw();
+    });
+  });
+
+  context('with baseClearance, xClearance and yClearance', function () {
+    before(function () {
+      this.debug = makeContainer({
+        innerWidth: 40,
+        innerDepth: 32,
+        outerHeight: 50,
+        bottomThickness: 1.5,
+        wallThickness: 2,
+        baseClearance: 5,
+        xClearance: 3,
+        yClearance: 7,
+      }).debug;
+    });
+
+    it('makes a hole in the walls that run in the x direction', function () {
+      expect(this.debug.xHoleSize).to.eql([
+        34,
+        36,
+        50,
+      ]);
+
+      expect(this.debug.xHolePosition).to.eql([
+        5,
+        0,
+        6.5,
+      ]);
+    });
+
+    it('makes a hole in walls that run in the y direction', function () {
+      expect(this.debug.yHoleSize).to.eql([
+        44,
+        18,
+        50,
+      ]);
+
+      expect(this.debug.yHolePosition).to.eql([
+        0,
+        9,
+        6.5,
+      ]);
     });
   });
 });

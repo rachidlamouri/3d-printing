@@ -1,6 +1,8 @@
 const Joi = require('@hapi/joi');
+const _ = require('lodash');
 const {
   sizeToMeta,
+  positionToMeta,
   getNextMultiple,
   assembleMeta,
   buildBuildWithDefaults,
@@ -25,6 +27,7 @@ const calculateDimensions = ({
   bottomThickness,
   minBottomHoleSideLength,
   bottomClearance,
+  baseClearance,
 }) => {
   const wallThicknessToUse = isWallThicknessSet ? wallThickness : minWallThickness;
   const minOuterWidth = innerWidth + 2 * wallThicknessToUse;
@@ -59,6 +62,7 @@ const calculateDimensions = ({
       adjustedInnerDepth - 2 * bottomClearance,
       minBottomHoleSideLength,
     ),
+    xyHoleZPosition: baseClearance === Infinity ? bottomThickness : bottomThickness + baseClearance,
   };
 };
 
@@ -127,6 +131,7 @@ const createBottomHole = ({
   ];
 
   return {
+    bottomHoleExists: bottomHoleWidth > 0 && bottomHoleDepth > 0,
     bottomHole: {
       ...sizeToMeta(size),
       cube: cube({ size }).translate(position),
@@ -134,18 +139,97 @@ const createBottomHole = ({
   };
 };
 
+const createXHole = ({
+  innerWidth,
+  outerWidth,
+  outerDepth,
+  outerHeight,
+  xyHoleZPosition,
+  xClearance,
+}) => {
+  const holeWidth = innerWidth - 2 * xClearance;
+  const size = [
+    holeWidth,
+    outerDepth,
+    outerHeight,
+  ];
+  const position = [
+    (outerWidth / 2) - (holeWidth / 2),
+    0,
+    xyHoleZPosition,
+  ];
+
+  const xHoleExists = xClearance !== Infinity;
+  return {
+    xHoleExists,
+    xHole: xHoleExists
+      ? {
+        ...sizeToMeta(size),
+        ...positionToMeta(position),
+        cube: cube({ size }).translate(position),
+      }
+      : null,
+  };
+};
+
+const createYHole = ({
+  innerDepth,
+  outerWidth,
+  outerDepth,
+  outerHeight,
+  xyHoleZPosition,
+  yClearance,
+}) => {
+  const holeDepth = innerDepth - 2 * yClearance;
+  const size = [
+    outerWidth,
+    holeDepth,
+    outerHeight,
+  ];
+  const position = [
+    0,
+    (outerDepth / 2) - (holeDepth / 2),
+    xyHoleZPosition,
+  ];
+
+  const yHoleExists = yClearance !== Infinity;
+  return {
+    yHoleExists,
+    yHole: yHoleExists
+      ? {
+        ...sizeToMeta(size),
+        ...positionToMeta(position),
+        cube: cube({ size }).translate(position),
+      }
+      : null,
+  };
+};
+
 const createContainer = ({
   outerBox,
   innerBox,
+  bottomHoleExists,
   bottomHole,
+  xHoleExists,
+  xHole,
+  yHoleExists,
+  yHole,
 }) => {
   const differenceList = [
     outerBox.cube,
     innerBox.cube,
   ];
 
-  if (bottomHole.width > 0 && bottomHole.depth > 0) {
+  if (bottomHoleExists) {
     differenceList.push(bottomHole.cube);
+  }
+
+  if (xHoleExists) {
+    differenceList.push(xHole.cube);
+  }
+
+  if (yHoleExists) {
+    differenceList.push(yHole.cube);
   }
 
   return {
@@ -160,6 +244,8 @@ const createDebug = ({
   widthWallThickness,
   depthWallThickness,
   bottomThickness,
+  xHole,
+  yHole,
 }) => ({
   debug: {
     innerBoxSize: innerBox.size,
@@ -170,6 +256,10 @@ const createDebug = ({
       bottomThickness,
     ],
     bottomHoleSize: bottomHole.size,
+    xHoleSize: _.get(xHole, 'size', null),
+    xHolePosition: _.get(xHole, 'position', null),
+    yHoleSize: _.get(yHole, 'size', null),
+    yHolePosition: _.get(yHole, 'position', null),
   },
 });
 
@@ -183,6 +273,9 @@ const makeContainer = ({
   bottomThickness = 1,
   minBottomHoleSideLength = 5,
   bottomClearance = 16,
+  baseClearance = Infinity,
+  xClearance = Infinity,
+  yClearance = Infinity,
   ignoreDecimalPrecision = false,
   ...extraParameters
 } = {}) => {
@@ -198,6 +291,9 @@ const makeContainer = ({
     bottomThickness,
     minBottomHoleSideLength,
     bottomClearance,
+    baseClearance,
+    xClearance,
+    yClearance,
     ignoreDecimalPrecision,
   };
 
@@ -215,6 +311,9 @@ const makeContainer = ({
     bottomThickness: requiredPositiveNumber(),
     minBottomHoleSideLength: requiredNonNegativeInteger(),
     bottomClearance: requiredNonNegativeInteger().allow(Infinity),
+    baseClearance: requiredNonNegativeInteger().allow(Infinity),
+    xClearance: requiredNonNegativeInteger().allow(Infinity),
+    yClearance: requiredNonNegativeInteger().allow(Infinity),
     ignoreDecimalPrecision: requiredBoolean,
   });
 
@@ -224,6 +323,8 @@ const makeContainer = ({
     createOuterBox,
     createInnerBox,
     createBottomHole,
+    createXHole,
+    createYHole,
     createContainer,
     createDebug,
   );

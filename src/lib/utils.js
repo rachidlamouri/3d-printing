@@ -9,6 +9,15 @@ const sizeToMeta = (size) => {
     height,
   };
 };
+const positionToMeta = (position) => {
+  const [x, y, z] = position;
+  return {
+    position,
+    x,
+    y,
+    z,
+  };
+};
 const getNextMultiple = (value, multiplier) => Math.ceil(value / multiplier) * multiplier;
 
 const assembleMeta = (parameters, ...assemblerFunctions) => (
@@ -26,6 +35,7 @@ const buildBuildWithDefaults = _.curry(runWithDefaults);
 
 module.exports = {
   sizeToMeta,
+  positionToMeta,
   getNextMultiple,
   assembleMeta,
   buildBuildWithDefaults,

@@ -35,12 +35,30 @@ global.main = () => {
       innerWidth: supportBaseSize,
       innerDepth: supportBaseSize,
     }),
+    wallet: makeContainerWithFlexibleDimensions({
+      innerWidth: 90,
+      innerDepth: 34,
+      outerHeight: 40,
+      bottomClearance: 8,
+      baseClearance: 16,
+      xClearance: 16,
+      yClearance: 14,
+    }),
+    watch: makeContainerWithFlexibleDimensions({
+      innerWidth: 70,
+      innerDepth: 24,
+      outerHeight: 40,
+      bottomClearance: 8,
+      baseClearance: 16,
+      xClearance: 16,
+      yClearance: 10,
+    }),
   };
 
   const {
     container,
     debug,
-  } = entities.chapstick;
+  } = entities.watch;
 
   logger.log(debug);
   return container;

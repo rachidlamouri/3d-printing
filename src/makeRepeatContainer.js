@@ -7,6 +7,7 @@ const {
 } = require('./lib/validation');
 const {
   assembleMeta,
+  buildBuildWithDefaults,
 } = require('./lib/utils');
 const { makeContainer } = require('./makeContainer');
 
@@ -14,23 +15,25 @@ const createRepeatedEntities = ({
   innerWidth,
   innerDepth,
   outerHeight,
+  dividerThickness,
+  bottomThickness,
   count,
 }) => {
-  const wallThickness = 1;
   const repeatedEntities = _.range(count).map((index) => {
     const containerMeta = makeContainer({
       innerWidth,
       innerDepth,
       outerHeight,
       sideLengthMultiple: null,
-      wallThickness,
+      wallThickness: dividerThickness,
+      bottomThickness,
     });
 
     const { outerWidth } = containerMeta;
     const xOffset = (
       index === 0
         ? 0
-        : (index * outerWidth) - (index * wallThickness)
+        : (index * outerWidth) - (index * dividerThickness)
     );
 
     containerMeta.container = containerMeta.container.translate([xOffset, 0, 0]);
@@ -71,14 +74,16 @@ const createOuterContainerMeta = ({
       innerWidth,
       innerDepth,
       outerHeight,
-      minWallThickness: 1,
+      minWallThickness: 0.1,
       bottomClearance: 0,
       sideLengthMultiple,
       ignoreDecimalPrecision: true,
     });
 
     const { widthWallThickness, depthWallThickness } = outerContainerMeta;
-    outerContainerMeta.container = outerContainerMeta.container.translate([-widthWallThickness, -depthWallThickness, 0]);
+    outerContainerMeta.container = outerContainerMeta.container
+      .translate([-widthWallThickness, -depthWallThickness, 0])
+      .setColor([0, 0, 1]);
   }
 
   return {
@@ -124,19 +129,22 @@ const createDebug = ({
     },
   };
 };
-
-module.exports.makeRepeatContainer = ({
+const makeRepeatContainer = ({
   innerWidth = 20,
   innerDepth = 20,
   outerHeight = 20,
   count = 2,
   sideLengthMultiple = null,
+  dividerThickness = 1,
+  bottomThickness = 1,
   ...extraParameters
 } = {}) => {
   const parameters = {
     innerWidth,
     innerDepth,
     outerHeight,
+    dividerThickness,
+    bottomThickness,
     count,
     sideLengthMultiple,
     isSideLengthMultipleSet: sideLengthMultiple !== null,
@@ -146,6 +154,8 @@ module.exports.makeRepeatContainer = ({
     innerWidth: Joi.any(),
     innerDepth: Joi.any(),
     outerHeight: Joi.any(),
+    dividerThickness: Joi.any(),
+    bottomThickness: Joi.any(),
     count: requiredPositiveInteger(),
     sideLengthMultiple: requiredPositiveInteger().allow(null),
     isSideLengthMultipleSet: requiredBoolean(),
@@ -159,4 +169,9 @@ module.exports.makeRepeatContainer = ({
     createContainer,
     createDebug,
   );
+};
+
+module.exports = {
+  makeRepeatContainer,
+  buildMakeRepeatContainerWithDefaults: buildBuildWithDefaults(makeRepeatContainer),
 };

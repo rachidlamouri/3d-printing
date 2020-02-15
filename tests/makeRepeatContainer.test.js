@@ -84,9 +84,44 @@ describe('makeRepeatContainer', function () {
     it('adjusts the outer dimensions to respect the sideLengthMultiple', function () {
       expect(this.debug.finalOuterSize).to.eql([
         20,
-        15,
+        10,
         12,
       ]);
+    });
+  });
+
+  context('with bottomThickness', function () {
+    before(function () {
+      this.repeatedEntities = makeRepeatContainer({
+        count: 3,
+        bottomThickness: 7,
+      }).repeatedEntities;
+    });
+
+    it('sets the bottomThickness of the repeated entitites', function () {
+      expect(this.repeatedEntities).to.have.lengthOf(3);
+
+      this.repeatedEntities.forEach((entity) => {
+        expect(entity.containerMeta.bottomThickness).to.equal(7);
+      });
+    });
+  });
+
+  context('with dividerThickness', function () {
+    before(function () {
+      this.repeatedEntities = makeRepeatContainer({
+        count: 3,
+        dividerThickness: 2,
+        bottomThickness: 3,
+      }).repeatedEntities;
+    });
+
+    it('sets the wallThickness of the repeated entities', function () {
+      expect(this.repeatedEntities).to.have.lengthOf(3);
+
+      this.repeatedEntities.forEach((entity) => {
+        expect(entity.containerMeta.debug.wallThicknessSizes).to.eql([2, 2, 3]);
+      });
     });
   });
 });

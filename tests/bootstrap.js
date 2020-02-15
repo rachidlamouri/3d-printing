@@ -2,6 +2,10 @@ class OpenJscadObject {
   translate() {
     return this;
   }
+
+  setColor() {
+    return this;
+  }
 }
 
 Object.assign(

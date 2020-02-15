@@ -124,4 +124,38 @@ describe('makeRepeatContainer', function () {
       });
     });
   });
+
+  context('with bottomClearance', function () {
+    before(function () {
+      this.repeatedEntities = makeRepeatContainer({
+        count: 3,
+        bottomClearance: 10,
+      }).repeatedEntities;
+    });
+
+    it('sets the bottomClearance of the repeated entities', function () {
+      expect(this.repeatedEntities).to.have.lengthOf(3);
+
+      this.repeatedEntities.forEach((entity) => {
+        expect(entity.containerMeta.bottomClearance).to.eql(10);
+      });
+    });
+  });
+
+  context('with minBottomHoleSideLength', function () {
+    before(function () {
+      this.repeatedEntities = makeRepeatContainer({
+        count: 3,
+        minBottomHoleSideLength: 8,
+      }).repeatedEntities;
+    });
+
+    it('sets the bottomClearance of the repeated entities', function () {
+      expect(this.repeatedEntities).to.have.lengthOf(3);
+
+      this.repeatedEntities.forEach((entity) => {
+        expect(entity.containerMeta.minBottomHoleSideLength).to.eql(8);
+      });
+    });
+  });
 });

@@ -17,6 +17,8 @@ const createRepeatedEntities = ({
   outerHeight,
   dividerThickness,
   bottomThickness,
+  minBottomHoleSideLength,
+  bottomClearance,
   count,
 }) => {
   const repeatedEntities = _.range(count).map((index) => {
@@ -27,6 +29,8 @@ const createRepeatedEntities = ({
       sideLengthMultiple: null,
       wallThickness: dividerThickness,
       bottomThickness,
+      minBottomHoleSideLength,
+      bottomClearance,
     });
 
     const { outerWidth } = containerMeta;
@@ -137,6 +141,8 @@ const makeRepeatContainer = ({
   sideLengthMultiple = null,
   dividerThickness = 1,
   bottomThickness = 1,
+  minBottomHoleSideLength,
+  bottomClearance = 16,
   ...extraParameters
 } = {}) => {
   const parameters = {
@@ -145,6 +151,8 @@ const makeRepeatContainer = ({
     outerHeight,
     dividerThickness,
     bottomThickness,
+    minBottomHoleSideLength,
+    bottomClearance,
     count,
     sideLengthMultiple,
     isSideLengthMultipleSet: sideLengthMultiple !== null,
@@ -156,6 +164,8 @@ const makeRepeatContainer = ({
     outerHeight: Joi.any(),
     dividerThickness: Joi.any(),
     bottomThickness: Joi.any(),
+    minBottomHoleSideLength: Joi.any(),
+    bottomClearance: Joi.any(),
     count: requiredPositiveInteger(),
     sideLengthMultiple: requiredPositiveInteger().allow(null),
     isSideLengthMultipleSet: requiredBoolean(),

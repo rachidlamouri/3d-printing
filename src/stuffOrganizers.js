@@ -1,6 +1,8 @@
 const { logger } = require('./logger');
 const { buildMakeContainerWithDefaults } = require('./makeContainer');
+const { buildMakeRepeatContainerWithDefaults } = require('./makeRepeatContainer');
 
+const defaultWallThickness = 0.8;
 const defaults = {
   sideLengthMultiple: 2,
   outerHeight: 20,
@@ -9,12 +11,17 @@ const defaults = {
 
 const makeContainerWithFlexibleDimensions = buildMakeContainerWithDefaults({
   ...defaults,
-  wallThickness: 0.8,
+  wallThickness: defaultWallThickness,
 });
 
 const makeContainerWithFlexibleWalls = buildMakeContainerWithDefaults({
   ...defaults,
-  minWallThickness: 0.8,
+  minWallThickness: defaultWallThickness,
+});
+
+const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
+  ...defaults,
+  dividerThickness: defaultWallThickness,
 });
 
 global.main = () => {
@@ -53,12 +60,26 @@ global.main = () => {
       xClearance: 16,
       yClearance: 10,
     }),
+    mints: makeRepeatContainer({
+      innerWidth: 8,
+      innerDepth: 32,
+      count: 2,
+      minBottomHoleSideLength: 3,
+      bottomClearance: 6,
+    }),
+    sdCards: makeRepeatContainer({
+      innerWidth: 2.7,
+      innerDepth: 25,
+      count: 4,
+      minBottomHoleSideLength: 1,
+      bottomClearance: 4,
+    }),
   };
 
   const {
     container,
     debug,
-  } = entities.watch;
+  } = entities.sdCards;
 
   logger.log(debug);
   return container;

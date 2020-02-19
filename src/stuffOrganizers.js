@@ -1,6 +1,8 @@
 const { logger } = require('./logger');
 const { buildMakeContainerWithDefaults } = require('./makeContainer');
 const { buildMakeRepeatContainerWithDefaults } = require('./makeRepeatContainer');
+const { makeShims } = require('./makeShims');
+const plan = require('./stuffOrganizerPlan');
 
 const defaultWallThickness = 0.8;
 const defaults = {
@@ -17,6 +19,12 @@ const makeContainerWithFlexibleDimensions = buildMakeContainerWithDefaults({
 const makeContainerWithFlexibleWalls = buildMakeContainerWithDefaults({
   ...defaults,
   minWallThickness: defaultWallThickness,
+});
+
+const makeContainerWithoutFlexing = buildMakeContainerWithDefaults({
+  ...defaults,
+  sideLengthMultiple: null,
+  wallThickness: defaultWallThickness,
 });
 
 const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
@@ -74,12 +82,18 @@ global.main = () => {
       minBottomHoleSideLength: 1,
       bottomClearance: 4,
     }),
+    boundingBox: makeContainerWithoutFlexing({
+      innerDepth: plan.boundingContainer.withTolerance.height,
+      innerWidth: plan.boundingContainer.withTolerance.width,
+      bottomClearance: 30,
+    }),
+    shims: { container: makeShims(plan.shimGroups) },
   };
 
   const {
     container,
     debug,
-  } = entities.sdCards;
+  } = entities.shims;
 
   logger.log(debug);
   return container;

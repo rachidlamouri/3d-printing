@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { miniCard } = require('./lotrConstants');
 const {
   sizeToMeta,
@@ -5,6 +6,7 @@ const {
 } = require('./lib/utils');
 
 const deriveParameters = ({
+  numberOfCards,
   edgeWidth,
   miniCardHoleHeight,
   baseDepth,
@@ -16,7 +18,7 @@ const deriveParameters = ({
   const cardDepthOffset = (baseDepth / 2) - cardIntersectionPointToBottomOfCardXOffset + (intersectedWidth / 2);
 
   return {
-    baseWidth: miniCard.width + 2 * edgeWidth,
+    baseWidth: numberOfCards * miniCard.width + 2 * edgeWidth,
     cardDepthOffset,
   };
 };
@@ -61,6 +63,7 @@ const createVerticalGuide = ({
 };
 
 const createCardHole = ({
+  numberOfCards,
   edgeWidth,
   cardAngleDegrees,
   miniCardHoleHeight,
@@ -73,13 +76,13 @@ const createCardHole = ({
   ];
 
   return {
-    cardHole: {
+    cardHoles: _.range(numberOfCards).map((index) => ({
       ...sizeToMeta(size),
       cube: cube({ size })
         .rotateX(cardAngleDegrees)
         .setColor([1, 0, 0])
-        .translate([edgeWidth, cardDepthOffset, 0]),
-    },
+        .translate([edgeWidth + (index * miniCard.width), cardDepthOffset, 0]),
+    })),
   };
 };
 
@@ -113,19 +116,21 @@ const createEntity = ({
   showVerticalGuide,
   base,
   verticalGuide,
-  cardHole,
+  cardHoles,
   cardBottomCutoff,
 }) => {
   const baseEntity = showVerticalGuide
-    ? union(base.cube, verticalGuide)
+    ? union(base.cube, verticalGuide.cube)
     : base.cube;
 
   const entity = difference(
     baseEntity,
-    difference(
-      cardHole.cube,
-      cardBottomCutoff.cube,
-    ),
+    ...cardHoles.map((cardHole) => (
+      difference(
+        cardHole.cube,
+        cardBottomCutoff.cube,
+      )
+    )),
   );
 
   return {
@@ -133,9 +138,10 @@ const createEntity = ({
   };
 };
 
-module.exports.makeCardRail = () => {
+module.exports.makeCardRail = (numberOfCards = 1) => {
   const cardAngleDegrees = 80;
   const initialParameters = {
+    numberOfCards,
     showVerticalGuide: false,
     edgeWidth: 2,
     cardAngleDegrees,

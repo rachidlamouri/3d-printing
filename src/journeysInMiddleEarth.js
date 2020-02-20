@@ -2,7 +2,7 @@ const { makeCardRail } = require('./makeCardRail');
 
 global.main = () => {
   const meta = {
-    cardRail: makeCardRail(),
+    cardRail: makeCardRail(4),
   };
 
   const { entity } = meta.cardRail;

@@ -139,7 +139,7 @@ const createEntity = ({
 };
 
 module.exports.makeCardRail = (numberOfCards = 1) => {
-  const cardAngleDegrees = 80;
+  const cardAngleDegrees = 70;
   const initialParameters = {
     numberOfCards,
     showVerticalGuide: false,
@@ -148,7 +148,7 @@ module.exports.makeCardRail = (numberOfCards = 1) => {
     cardAngleRadians: (cardAngleDegrees * Math.PI) / 180,
     miniCardHoleHeight: 1,
     grooveHeight: 6.5,
-    baseHeight: 10,
+    baseHeight: 7,
     baseDepth: 10,
   };
 

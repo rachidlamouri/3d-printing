@@ -33,6 +33,7 @@ const createCards = ({
   block,
   stepHeight,
   widthOffset,
+  wallThickness,
 }) => {
   const cardHoles = _.range(numberOfCards).map((index) => {
     const size = [
@@ -43,8 +44,8 @@ const createCards = ({
 
     return cube({ size })
       .translate([
-        widthOffset * index,
-        0,
+        wallThickness + widthOffset * index,
+        wallThickness,
         baseHeight + index * stepHeight,
       ])
       .setColor([0, 0, 1]);
@@ -58,9 +59,8 @@ const createCards = ({
 const createOuterContainer = ({
   block,
   stepHeight,
+  wallThickness,
 }) => {
-  const wallThickness = 0.8;
-
   const outerContainer = makeContainer({
     innerWidth: block.width,
     innerDepth: block.depth,
@@ -69,8 +69,6 @@ const createOuterContainer = ({
     bottomClearance: 0,
     wallThickness,
   });
-
-  outerContainer.container = outerContainer.container.translate([-wallThickness, -wallThickness, 0]);
 
   return {
     outerContainer,
@@ -104,6 +102,7 @@ module.exports.makeDamageContainer = ({
     stepHeight: 0.6,
     widthOffset: 16,
     numberOfCards,
+    wallThickness: 0.8,
   };
 
   return assembleMeta(

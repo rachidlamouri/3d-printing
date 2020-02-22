@@ -98,7 +98,7 @@ const createEntity = ({
 module.exports.makeDamageContainer = (numberOfCards) => {
   const initialParameters = {
     baseHeight: 0.6,
-    stepHeight: 1,
+    stepHeight: 0.6,
     widthOffset: 16,
     numberOfCards,
   };

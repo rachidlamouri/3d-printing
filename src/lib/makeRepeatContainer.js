@@ -6,6 +6,7 @@ const {
   validateParameters,
 } = require('./validation');
 const {
+  sizeToMeta,
   assembleMeta,
   buildBuildWithDefaults,
 } = require('./utils');
@@ -92,6 +93,11 @@ const createOuterContainerMeta = ({
 
   return {
     outerContainerMeta,
+    finalDimensions: sizeToMeta(
+      isSideLengthMultipleSet
+        ? outerContainerMeta.outerBox.size
+        : startingOuterSize,
+    ),
   };
 };
 

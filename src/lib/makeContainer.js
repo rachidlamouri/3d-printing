@@ -63,6 +63,7 @@ const calculateDimensions = ({
       minBottomHoleSideLength,
     ),
     xyHoleZPosition: baseClearance === Infinity ? bottomThickness : bottomThickness + baseClearance,
+    finalDimensions: sizeToMeta([outerWidth, outerDepth, outerHeight]),
   };
 };
 

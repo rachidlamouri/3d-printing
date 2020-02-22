@@ -1,6 +1,5 @@
 const _ = require('lodash');
 const { makeRepeatContainer } = require('../lib/makeRepeatContainer');
-
 const { miniCard } = require('./lotrConstants');
 const {
   sizeToMeta,
@@ -27,6 +26,7 @@ const createBaseContainer = ({
 
   return {
     baseContainerMeta,
+    finalDimensions: baseContainerMeta.finalDimensions,
   };
 };
 

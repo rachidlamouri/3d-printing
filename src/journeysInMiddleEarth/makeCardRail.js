@@ -135,22 +135,24 @@ const createEntity = ({
 
   return {
     entity,
+    finalDimensions: sizeToMeta(base.size),
   };
 };
 
 module.exports.makeCardRail = ({
   numberOfCards = 1,
+  baseHeight = 7,
 }) => {
   const cardAngleDegrees = 70;
   const initialParameters = {
     numberOfCards,
     showVerticalGuide: false,
-    edgeWidth: 2,
+    edgeWidth: 0.8,
     cardAngleDegrees,
     cardAngleRadians: (cardAngleDegrees * Math.PI) / 180,
     miniCardHoleHeight: 1,
     grooveHeight: 6.5,
-    baseHeight: 7,
+    baseHeight,
     baseDepth: 10,
   };
 

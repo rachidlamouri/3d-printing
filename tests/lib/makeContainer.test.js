@@ -1,10 +1,10 @@
 const { expect } = require('chai');
-const { makeContainer } = require('../src/makeContainer');
+const { makeContainer } = require('../../src/lib/makeContainer');
 const {
   buildBehaviorsForFunction,
   buildTheyMustBeSomethingForContextTuples,
   itThrowsAnErrorWhenCalledWithExtraParameters,
-} = require('./helpers/behaviors');
+} = require('../helpers/behaviors');
 
 const {
   theyMustBePositiveIntegers,

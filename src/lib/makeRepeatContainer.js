@@ -4,11 +4,11 @@ const {
   requiredPositiveInteger,
   requiredBoolean,
   validateParameters,
-} = require('./lib/validation');
+} = require('./validation');
 const {
   assembleMeta,
   buildBuildWithDefaults,
-} = require('./lib/utils');
+} = require('./utils');
 const { makeContainer } = require('./makeContainer');
 
 const createRepeatedEntities = ({

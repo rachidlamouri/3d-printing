@@ -1,12 +1,12 @@
 const _ = require('lodash');
-const { makeRepeatContainer } = require('./makeRepeatContainer');
+const { makeRepeatContainer } = require('../lib/makeRepeatContainer');
 
 const { miniCard } = require('./lotrConstants');
 const {
   sizeToMeta,
   positionToMeta,
   assembleMeta,
-} = require('./lib/utils');
+} = require('../lib/utils');
 
 const createBaseContainer = ({
   numberOfCards,

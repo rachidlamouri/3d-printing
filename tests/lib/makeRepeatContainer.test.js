@@ -1,9 +1,9 @@
 const { expect } = require('chai');
-const { makeRepeatContainer } = require('../src/makeRepeatContainer');
+const { makeRepeatContainer } = require('../../src/lib/makeRepeatContainer');
 
 const {
   itThrowsAnErrorWhenCalledWithExtraParameters,
-} = require('./helpers/behaviors');
+} = require('../helpers/behaviors');
 
 describe('makeRepeatContainer', function () {
   describe('parameter validation', function () {

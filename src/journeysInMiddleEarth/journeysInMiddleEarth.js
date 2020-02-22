@@ -1,7 +1,7 @@
 const { makeCardRail } = require('./makeCardRail');
 const { makeDamageContainer } = require('./makeDamageContainer');
 const { makeCardBank } = require('./makeCardBank');
-const { makeContainer } = require('./makeContainer');
+const { makeContainer } = require('../lib/makeContainer');
 
 global.main = () => {
   const wallThickness = 0.8;

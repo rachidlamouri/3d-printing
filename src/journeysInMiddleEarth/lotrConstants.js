@@ -1,4 +1,4 @@
-const { sizeToMeta } = require('./lib/utils');
+const { sizeToMeta } = require('../lib/utils');
 
 module.exports = {
   miniCard: sizeToMeta([

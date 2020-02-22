@@ -3,7 +3,7 @@ const { miniCard } = require('./lotrConstants');
 const {
   sizeToMeta,
   assembleMeta,
-} = require('./lib/utils');
+} = require('../lib/utils');
 
 const deriveParameters = ({
   numberOfCards,

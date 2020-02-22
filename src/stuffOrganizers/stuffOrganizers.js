@@ -1,8 +1,8 @@
-const { logger } = require('./logger');
-const { buildMakeContainerWithDefaults } = require('./makeContainer');
-const { buildMakeRepeatContainerWithDefaults } = require('./makeRepeatContainer');
-const { makeShims } = require('./makeShims');
-const plan = require('./stuffOrganizerPlan');
+const { logger } = require('../lib/logger');
+const { buildMakeContainerWithDefaults } = require('../lib/makeContainer');
+const { buildMakeRepeatContainerWithDefaults } = require('../lib/makeRepeatContainer');
+const { makeShims } = require('../lib/makeShims');
+const plan = require('./plan');
 
 const defaultWallThickness = 0.8;
 const defaults = {

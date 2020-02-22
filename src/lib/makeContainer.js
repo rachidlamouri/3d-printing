@@ -6,14 +6,14 @@ const {
   getNextMultiple,
   assembleMeta,
   buildBuildWithDefaults,
-} = require('./lib/utils');
+} = require('./utils');
 const {
   requiredPositiveInteger,
   requiredPositiveNumber,
   requiredNonNegativeInteger,
   requiredBoolean,
   validateParameters,
-} = require('./lib/validation');
+} = require('./validation');
 
 const calculateDimensions = ({
   innerWidth,

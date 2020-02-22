@@ -4,6 +4,7 @@ const { makeContainer } = require('../lib/makeContainer');
 const { miniCard } = require('./lotrConstants');
 const {
   sizeToMeta,
+  positionToMeta,
   assembleMeta,
 } = require('../lib/utils');
 
@@ -12,6 +13,7 @@ const createBlock = ({
   baseHeight,
   numberOfCards,
   widthOffset,
+  wallThickness,
 }) => {
   const size = [
     miniCard.width + (widthOffset * (numberOfCards - 1)),
@@ -19,73 +21,112 @@ const createBlock = ({
     baseHeight + numberOfCards * stepHeight,
   ];
 
+  const position = [
+    wallThickness,
+    wallThickness,
+    0,
+  ];
+
   return {
-    block: {
+    blockMeta: {
       ...sizeToMeta(size),
-      cube: cube({ size }),
+      ...positionToMeta(position),
+      cube: cube({ size })
+        .translate(position),
     },
   };
 };
 
-const createCards = ({
+const createCardHoles = ({
   baseHeight,
   numberOfCards,
-  block,
+  blockMeta,
   stepHeight,
   widthOffset,
-  wallThickness,
 }) => {
   const cardHoles = _.range(numberOfCards).map((index) => {
     const size = [
       miniCard.width,
       miniCard.depth,
-      block.height,
+      blockMeta.height,
     ];
 
     return cube({ size })
       .translate([
-        wallThickness + widthOffset * index,
-        wallThickness,
+        widthOffset * index,
+        0,
         baseHeight + index * stepHeight,
       ])
       .setColor([0, 0, 1]);
   });
 
   return {
-    cardHoles,
+    unionedCardHoles: union(...cardHoles).translate(blockMeta.position),
   };
 };
 
 const createOuterContainer = ({
-  block,
+  blockMeta,
   stepHeight,
   wallThickness,
 }) => {
-  const outerContainer = makeContainer({
-    innerWidth: block.width,
-    innerDepth: block.depth,
-    outerHeight: Math.ceil(block.height + stepHeight),
+  const outerContainerMeta = makeContainer({
+    innerWidth: blockMeta.width,
+    innerDepth: blockMeta.depth,
+    outerHeight: Math.ceil(blockMeta.height + stepHeight),
     ignoreDecimalPrecision: true,
     bottomClearance: 0,
     wallThickness,
   });
 
   return {
-    outerContainer,
+    outerContainerMeta,
+    finalDimensions: outerContainerMeta.finalDimensions,
+  };
+};
+
+const createWallHole = ({
+  outerContainerMeta,
+  wallThickness,
+}) => {
+  const overhang = 2;
+  const size = [
+    outerContainerMeta.innerWidth,
+    wallThickness + overhang,
+    outerContainerMeta.outerHeight,
+  ];
+
+  const position = [
+    wallThickness,
+    0,
+    0,
+  ];
+
+  return {
+    wallHoleMeta: {
+      ...sizeToMeta(size),
+      ...positionToMeta(position),
+      entity: cube(size)
+        .translate(position),
+    },
   };
 };
 
 const createEntity = ({
-  block,
-  cardHoles,
-  outerContainer,
+  blockMeta,
+  unionedCardHoles,
+  outerContainerMeta,
+  wallHoleMeta,
 }) => {
-  const entity = union(
-    difference(
-      block.cube,
-      ...cardHoles,
+  const entity = difference(
+    union(
+      difference(
+        blockMeta.cube,
+        unionedCardHoles,
+      ),
+      outerContainerMeta.container,
     ),
-    outerContainer.container,
+    wallHoleMeta.entity,
   );
 
   return {
@@ -108,8 +149,9 @@ module.exports.makeDamageContainer = ({
   return assembleMeta(
     initialParameters,
     createBlock,
-    createCards,
+    createCardHoles,
     createOuterContainer,
+    createWallHole,
     createEntity,
   );
 };

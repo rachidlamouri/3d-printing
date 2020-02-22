@@ -138,7 +138,9 @@ const createEntity = ({
   };
 };
 
-module.exports.makeCardRail = (numberOfCards = 1) => {
+module.exports.makeCardRail = ({
+  numberOfCards = 1,
+}) => {
   const cardAngleDegrees = 70;
   const initialParameters = {
     numberOfCards,

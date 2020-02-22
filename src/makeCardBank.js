@@ -105,13 +105,14 @@ module.exports.makeCardBank = ({
   numberOfCards = 2,
   outerHeight,
   dividerThickness,
+  bottomThickness = 0.6,
 }) => {
   const initialParameters = {
     numberOfCards,
     outerHeight,
     dividerThickness,
+    bottomThickness,
     bottomClearance: 5,
-    bottomThickness: 0.6,
     thumbHoleWidth: 20,
   };
 

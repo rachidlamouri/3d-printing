@@ -232,8 +232,10 @@ const createContainer = ({
     differenceList.push(yHole.cube);
   }
 
+  const container = difference(...differenceList);
   return {
-    container: difference(...differenceList),
+    container,
+    entity: container,
   };
 };
 

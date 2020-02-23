@@ -10,9 +10,9 @@ const sizeToMeta = (size) => {
   };
 };
 const positionToMeta = (position) => {
-  const [x, y, z] = position;
+  const [x, y, z = 0] = position;
   return {
-    position,
+    position: [x, y, z],
     x,
     y,
     z,

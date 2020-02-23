@@ -1,7 +1,7 @@
 const { makeCardRail } = require('./makeCardRail');
 const { makeDamageContainer } = require('./makeDamageContainer');
 const { makeCardBank } = require('./makeCardBank');
-const { makeContainer } = require('../lib/makeContainer');
+const { makePlayerCard } = require('./makePlayerCard');
 const { makeDemo } = require('./makeDemo');
 
 global.main = () => {
@@ -36,7 +36,7 @@ global.main = () => {
     }),
     provisionedMeta: makeCardBank(fourCardBankParameters),
     itemsMeta: makeCardBank(fourCardBankParameters),
-    playerCardMeta: makeContainer({
+    playerCardMeta: makePlayerCard({
       innerWidth: 120,
       innerDepth: 70,
       outerHeight: 2,

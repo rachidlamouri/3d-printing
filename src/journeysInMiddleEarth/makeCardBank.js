@@ -13,6 +13,7 @@ const createBaseContainer = ({
   dividerThickness,
   bottomThickness,
   bottomClearance,
+  plateHoleTolerance,
 }) => {
   const baseContainerMeta = makeRepeatContainer({
     count: numberOfCards,
@@ -26,6 +27,10 @@ const createBaseContainer = ({
 
   return {
     baseContainerMeta,
+    plateHoleMeta: makeRepeatContainer({
+      ...baseContainerMeta.initialParameters,
+      bottomClearance: bottomClearance + plateHoleTolerance,
+    }),
     finalDimensions: baseContainerMeta.finalDimensions,
   };
 };
@@ -91,7 +96,7 @@ const createEntity = ({
   thumbHoleMetas,
 }) => {
   const entity = difference(
-    baseContainerMeta.container,
+    baseContainerMeta.entity,
     ..._.map(wallHoleMetas, 'entity'),
     ..._.map(thumbHoleMetas, 'entity'),
   );
@@ -105,7 +110,8 @@ module.exports.makeCardBank = ({
   numberOfCards = 2,
   outerHeight,
   dividerThickness,
-  bottomThickness = 0.6,
+  bottomThickness,
+  plateHoleTolerance,
 }) => {
   const initialParameters = {
     numberOfCards,
@@ -114,6 +120,7 @@ module.exports.makeCardBank = ({
     bottomThickness,
     bottomClearance: 5,
     thumbHoleWidth: 20,
+    plateHoleTolerance,
   };
 
   return assembleMeta(

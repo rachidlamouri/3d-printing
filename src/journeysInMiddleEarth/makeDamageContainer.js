@@ -109,6 +109,7 @@ const createWallHole = ({
       entity: cube(size)
         .translate(position),
     },
+    overhang,
   };
 };
 

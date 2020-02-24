@@ -118,6 +118,7 @@ const createContainer = ({
 
   return {
     container,
+    entity: container,
   };
 };
 

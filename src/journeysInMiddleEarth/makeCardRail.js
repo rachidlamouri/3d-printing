@@ -112,12 +112,56 @@ const createCardBottomCutoff = ({
   };
 };
 
+const createBottomThicknessHoles = ({
+  baseDepth,
+  numberOfCards,
+  bottomThickness,
+  edgeWidth,
+  plateHoleTolerance,
+}) => {
+  const depthOffset = 1;
+  const sideLength = baseDepth - 2 * depthOffset;
+  const plateCutOutSideLength = sideLength - plateHoleTolerance;
+
+  const bottomThicknessHoleMetas = _.range(numberOfCards).map((index) => ({
+    regularEntity: (
+      cube([
+        sideLength,
+        sideLength,
+        bottomThickness,
+      ])
+        .translate([
+          edgeWidth + (miniCard.width / 2) - (sideLength / 2) + index * miniCard.width,
+          depthOffset,
+        ])
+        .setColor([0, 0, 1])
+    ),
+    plateHoleEntity: (
+      cube([
+        plateCutOutSideLength,
+        plateCutOutSideLength,
+        bottomThickness,
+      ])
+        .translate([
+          edgeWidth + (miniCard.width / 2) - (plateCutOutSideLength / 2) + index * miniCard.width,
+          (baseDepth - plateCutOutSideLength) / 2,
+        ])
+        .setColor([0, 0, 1])
+    ),
+  }));
+
+  return {
+    bottomThicknessHoleMetas,
+  };
+};
+
 const createEntity = ({
   showVerticalGuide,
   base,
   verticalGuide,
   cardHoles,
   cardBottomCutoff,
+  bottomThicknessHoleMetas,
 }) => {
   const baseEntity = showVerticalGuide
     ? union(base.cube, verticalGuide.cube)
@@ -131,17 +175,26 @@ const createEntity = ({
         cardBottomCutoff.cube,
       )
     )),
+    ..._.map(bottomThicknessHoleMetas, 'regularEntity'),
+  );
+
+  const plateHoleEntity = difference(
+    baseEntity,
+    ..._.map(bottomThicknessHoleMetas, 'plateHoleEntity'),
   );
 
   return {
     entity,
+    plateHoleEntity,
     finalDimensions: sizeToMeta(base.size),
   };
 };
 
 module.exports.makeCardRail = ({
   numberOfCards = 1,
-  baseHeight = 7,
+  baseHeight = 10,
+  bottomThickness = 0.6,
+  plateHoleTolerance,
 }) => {
   const cardAngleDegrees = 70;
   const initialParameters = {
@@ -154,6 +207,8 @@ module.exports.makeCardRail = ({
     grooveHeight: 6.5,
     baseHeight,
     baseDepth: 10,
+    bottomThickness,
+    plateHoleTolerance,
   };
 
   return assembleMeta(
@@ -163,6 +218,7 @@ module.exports.makeCardRail = ({
     createVerticalGuide,
     createCardHole,
     createCardBottomCutoff,
+    createBottomThicknessHoles,
     createEntity,
   );
 };

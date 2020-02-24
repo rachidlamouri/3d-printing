@@ -25,7 +25,7 @@ const assembleMeta = (parameters, ...assemblerFunctions) => (
     (meta, assembleAdditionalMeta) => ({
       ...meta,
       ...assembleAdditionalMeta(meta),
-      originalParameters: parameters,
+      initialParameters: parameters,
     }),
     parameters,
   )

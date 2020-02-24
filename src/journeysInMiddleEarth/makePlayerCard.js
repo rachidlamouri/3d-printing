@@ -13,6 +13,7 @@ const createBaseContainer = ({
   bottomThickness,
   bottomClearance,
   wallThickness,
+  plateHoleTolerance,
 }) => {
   const baseContainerMeta = makeContainer({
     innerWidth,
@@ -25,6 +26,10 @@ const createBaseContainer = ({
 
   return {
     baseContainerMeta,
+    plateHoleMeta: makeContainer({
+      ...baseContainerMeta.initialParameters,
+      bottomClearance: bottomClearance + plateHoleTolerance,
+    }),
   };
 };
 
@@ -74,6 +79,7 @@ module.exports.makePlayerCard = ({
   outerHeight,
   bottomThickness,
   bottomClearance,
+  plateHoleTolerance,
   wallThickness,
 }) => {
   const initialParameters = {
@@ -82,6 +88,7 @@ module.exports.makePlayerCard = ({
     outerHeight,
     bottomThickness,
     bottomClearance,
+    plateHoleTolerance,
     wallThickness,
     thumbHoleWidth: 40,
   };

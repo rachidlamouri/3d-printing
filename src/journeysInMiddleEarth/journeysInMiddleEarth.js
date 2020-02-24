@@ -6,12 +6,16 @@ const { makeDemo } = require('./makeDemo');
 
 global.main = () => {
   const wallThickness = 0.8;
-  const bottomThickness = 1;
-  const plateHoleTolerance = 1;
+  const plateHoleTolerance = 0.25;
+  const bottomThickness = 1.4;
+  const plateBottomThickness = 0.6;
   const plateTopTolerance = 0.2;
+  const singleCardTargetHeight = 1.4;
+  const singleCardOuterHeight = Math.ceil(singleCardTargetHeight + bottomThickness);
+
   const fourCardBankParameters = {
     numberOfCards: 4,
-    outerHeight: 2,
+    outerHeight: singleCardOuterHeight,
     dividerThickness: wallThickness,
     plateHoleTolerance,
     bottomThickness,
@@ -22,6 +26,7 @@ global.main = () => {
   const metaMap = makeDemo({
     containerBottomThickness: bottomThickness,
     plateTopTolerance,
+    plateBottomThickness,
     metaMap: {
       cardRail1Meta: makeCardRail({
         numberOfCards: 2,
@@ -57,7 +62,7 @@ global.main = () => {
       playerCardMeta: makePlayerCard({
         innerWidth: 120,
         innerDepth: 70,
-        outerHeight: 4,
+        outerHeight: singleCardOuterHeight,
         bottomThickness,
         bottomClearance: 5,
         plateHoleTolerance,
@@ -66,6 +71,6 @@ global.main = () => {
     },
   });
 
-  const { entity } = metaMap.playerCardMeta;
+  const { entity } = metaMap.demoMeta;
   return entity;
 };

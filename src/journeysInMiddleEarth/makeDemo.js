@@ -154,12 +154,13 @@ module.exports.makeDemo = ({
   metaMap,
   containerBottomThickness,
   plateTopTolerance,
+  plateBottomThickness,
 }) => {
   const demoMeta = assembleMeta(
     {
       metaMap,
       containerBottomThickness,
-      plateBottomThickness: 0.6,
+      plateBottomThickness,
       plateTopTolerance,
       containerEdgeTolerance: 0.5,
     },

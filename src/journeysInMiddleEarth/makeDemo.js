@@ -155,6 +155,7 @@ module.exports.makeDemo = ({
   containerBottomThickness,
   plateTopTolerance,
   plateBottomThickness,
+  containerEdgeTolerance,
 }) => {
   const demoMeta = assembleMeta(
     {
@@ -162,7 +163,7 @@ module.exports.makeDemo = ({
       containerBottomThickness,
       plateBottomThickness,
       plateTopTolerance,
-      containerEdgeTolerance: 0.5,
+      containerEdgeTolerance,
     },
     createEntity,
   );

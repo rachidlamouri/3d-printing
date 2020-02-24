@@ -24,6 +24,7 @@ global.main = () => {
   const railHeight = 12;
 
   const metaMap = makeDemo({
+    containerEdgeTolerance: 0.2,
     containerBottomThickness: bottomThickness,
     plateTopTolerance,
     plateBottomThickness,

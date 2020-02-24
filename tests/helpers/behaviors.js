@@ -46,6 +46,10 @@ const buildTheyMustBeNonNegativeIntegersForItThrowsAnError = buildTheyMustBeSome
   whenNotAnIntegerContextTuple,
 );
 
+const buildTheyMustBeNonNegativeNumbersForItThrowsAnError = buildTheyMustBeSomethingForContextTuples(
+  whenNegativeContextTuple('must be larger than or equal to 0'),
+);
+
 const buildBehaviorsForFunction = (fn, customBehaviors = {}) => {
   const itThrowsAnErrorForParameters = buildItThrowsAnErrorForFunction(fn);
 
@@ -54,6 +58,7 @@ const buildBehaviorsForFunction = (fn, customBehaviors = {}) => {
       buildTheyMustBePositiveIntegersForItThrowsAnError,
       buildTheyMustBePositiveNumbersForItThrowsAnError,
       buildTheyMustBeNonNegativeIntegersForItThrowsAnError,
+      buildTheyMustBeNonNegativeNumbersForItThrowsAnError,
       ...customBehaviors,
     },
     (behaviors, buildTheyMustBeSomethingForItThrowsAnError, functionName) => {

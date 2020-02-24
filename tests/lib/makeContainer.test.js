@@ -11,6 +11,7 @@ const {
   theyMustBePositiveNumbers,
   theyMustBeNonNegativeIntegers,
   theyMustBeValidInnerDimensions,
+  theyMustBeNonNegativeNumbers,
 } = buildBehaviorsForFunction(makeContainer, {
   theyMustBeValidInnerDimensionsForItThrowsAnError: buildTheyMustBeSomethingForContextTuples(
     ['equal to minBottomHoleSideLength', 'must be greater than ref:minBottomHoleSideLength', 1, { minBottomHoleSideLength: 1 }],
@@ -41,10 +42,13 @@ describe('makeContainer', function () {
 
     theyMustBeNonNegativeIntegers(
       'minBottomHoleSideLength',
-      'bottomClearance',
       'baseClearance',
       'xClearance',
       'yClearance',
+    );
+
+    theyMustBeNonNegativeNumbers(
+      'bottomClearance',
     );
   });
 

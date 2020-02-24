@@ -11,6 +11,7 @@ const {
   requiredPositiveInteger,
   requiredPositiveNumber,
   requiredNonNegativeInteger,
+  requiredNonNegativeNumber,
   requiredBoolean,
   validateParameters,
 } = require('./validation');
@@ -313,7 +314,7 @@ const makeContainer = ({
     isWallThicknessSet: requiredBoolean(),
     bottomThickness: requiredPositiveNumber(),
     minBottomHoleSideLength: requiredNonNegativeInteger(),
-    bottomClearance: requiredNonNegativeInteger().allow(Infinity),
+    bottomClearance: requiredNonNegativeNumber().allow(Infinity),
     baseClearance: requiredNonNegativeInteger().allow(Infinity),
     xClearance: requiredNonNegativeInteger().allow(Infinity),
     yClearance: requiredNonNegativeInteger().allow(Infinity),

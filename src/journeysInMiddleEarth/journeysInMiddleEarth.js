@@ -50,6 +50,7 @@ global.main = () => {
       damageContainerMeta: makeDamageContainer({
         numberOfCards: 8,
         baseHeight: bottomThickness,
+        plateHoleTolerance,
       }),
       drawDiscardMeta: makeCardBank({
         numberOfCards: 2,

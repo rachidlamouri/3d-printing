@@ -65,7 +65,7 @@ const createEntity = ({
       .translate(positions.drawDiscard),
     playerCardMeta.plateHoleMeta.entity
       .translate(positions.playerCard),
-    damageContainerMeta.entity
+    damageContainerMeta.plateHoleEntity
       .translate(positions.damageContainer),
     provisionedMeta.plateHoleMeta.entity.translate(positions.provisioned),
     itemsMeta.plateHoleMeta.entity.translate(positions.items),
@@ -110,8 +110,8 @@ const createEntity = ({
       .translate(positions.drawDiscard),
     cube([playerCardMeta.finalDimensions.width, playerCardMeta.finalDimensions.depth, plateTopHeight])
       .translate(positions.playerCard),
-    cube([damageContainerMeta.finalDimensions.width, damageContainerMeta.finalDimensions.depth / 4, plateTopHeight])
-      .translate([positions.damageContainer[0], positions.damageContainer[1] + damageContainerMeta.finalDimensions.depth / 4]),
+    cube([damageContainerMeta.finalDimensions.width, damageContainerMeta.finalDimensions.depth, plateTopHeight])
+      .translate(positions.damageContainer),
     cube([provisionedMeta.finalDimensions.width, provisionedMeta.finalDimensions.depth, plateTopHeight])
       .translate(positions.provisioned),
     cube([itemsMeta.finalDimensions.width, itemsMeta.finalDimensions.depth, plateTopHeight])
@@ -129,7 +129,7 @@ const createEntity = ({
   );
 
   const plateSectionCount = 3;
-  const sectionTolerance = 1;
+  const sectionTolerance = 0.5;
   const plateSections = _.range(plateSectionCount).map((index) => {
     const currentSectionTolerance = (index + 1) !== plateSectionCount
       ? sectionTolerance

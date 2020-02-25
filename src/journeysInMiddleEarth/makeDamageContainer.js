@@ -113,11 +113,60 @@ const createWallHole = ({
   };
 };
 
+const createBottomThicknessHoles = ({
+  outerContainerMeta,
+  baseHeight,
+  plateHoleTolerance,
+}) => {
+  const sideLength = miniCard.width / 4;
+  const edgeOffset = 16;
+  const plateCutoutSideLength = sideLength - plateHoleTolerance;
+
+  const centerPositions = [
+    [edgeOffset + (sideLength / 2), edgeOffset + (sideLength / 2)],
+    [edgeOffset + (sideLength / 2), outerContainerMeta.finalDimensions.depth - edgeOffset - (sideLength / 2)],
+    [outerContainerMeta.finalDimensions.width - edgeOffset - (sideLength / 2), edgeOffset + (sideLength / 2)],
+    [outerContainerMeta.finalDimensions.width - edgeOffset - (sideLength / 2), outerContainerMeta.finalDimensions.depth - edgeOffset - (sideLength / 2)],
+  ];
+
+  const bottomThicknessHoleMetas = {
+    regularEntities: centerPositions.map(([widthCenterOffset, depthCenterOffset]) => (
+      cube([
+        sideLength,
+        sideLength,
+        baseHeight,
+      ])
+        .translate([
+          widthCenterOffset - (sideLength / 2),
+          depthCenterOffset - (sideLength / 2),
+        ])
+        .setColor([0, 0, 1])
+    )),
+    plateHoleEntities: centerPositions.map(([widthCenterOffset, depthCenterOffset]) => (
+      cube([
+        plateCutoutSideLength,
+        plateCutoutSideLength,
+        baseHeight,
+      ])
+        .translate([
+          widthCenterOffset - (plateCutoutSideLength / 2),
+          depthCenterOffset - (plateCutoutSideLength / 2),
+        ])
+        .setColor([0, 0, 1])
+    )),
+  };
+
+  return {
+    bottomThicknessHoleMetas,
+  };
+};
+
 const createEntity = ({
   blockMeta,
   unionedCardHoles,
   outerContainerMeta,
   wallHoleMeta,
+  bottomThicknessHoleMetas,
 }) => {
   const entity = difference(
     union(
@@ -128,16 +177,22 @@ const createEntity = ({
       outerContainerMeta.container,
     ),
     wallHoleMeta.entity,
+    ...bottomThicknessHoleMetas.regularEntities,
   );
 
   return {
     entity,
+    plateHoleEntity: difference(
+      cube(outerContainerMeta.finalDimensions.size),
+      ...bottomThicknessHoleMetas.plateHoleEntities,
+    ),
   };
 };
 
 module.exports.makeDamageContainer = ({
   numberOfCards = 2,
-  baseHeight = 0.6,
+  baseHeight,
+  plateHoleTolerance,
 }) => {
   const initialParameters = {
     baseHeight,
@@ -145,6 +200,7 @@ module.exports.makeDamageContainer = ({
     widthOffset: 16,
     numberOfCards,
     wallThickness: 0.8,
+    plateHoleTolerance,
   };
 
   return assembleMeta(
@@ -153,6 +209,7 @@ module.exports.makeDamageContainer = ({
     createCardHoles,
     createOuterContainer,
     createWallHole,
+    createBottomThicknessHoles,
     createEntity,
   );
 };

@@ -6,7 +6,7 @@ const { makeDemo } = require('./makeDemo');
 
 global.main = () => {
   const wallThickness = 0.8;
-  const plateHoleTolerance = 0.25;
+  const plateHoleTolerance = 0.5;
   const bottomThickness = 1.4;
   const plateBottomThickness = 0.6;
   const plateTopTolerance = 0.2;
@@ -20,7 +20,7 @@ global.main = () => {
     plateHoleTolerance,
     bottomThickness,
   };
-  const drawDiscardHeight = 20;
+  const drawDiscardHeight = 12;
   const railHeight = 12;
 
   const metaMap = makeDemo({

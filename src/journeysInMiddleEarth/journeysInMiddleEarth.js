@@ -21,7 +21,7 @@ global.main = () => {
     bottomThickness,
   };
   const drawDiscardHeight = 12;
-  const railHeight = 12;
+  const railHeight = drawDiscardHeight;
 
   const metaMap = makeDemo({
     containerEdgeTolerance: 0.2,
@@ -73,6 +73,6 @@ global.main = () => {
     },
   });
 
-  const { entity } = metaMap.demoMeta;
+  const { entity } = metaMap.drawDiscardMeta;
   return entity;
 };

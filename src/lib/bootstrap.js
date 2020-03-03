@@ -1,1 +1,3 @@
-global.window = global;
+import { logger } from './logger';
+
+global.logger = logger;

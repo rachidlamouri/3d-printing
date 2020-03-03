@@ -3,6 +3,7 @@ module.exports = {
     'cube',
     'difference',
     'intersection',
+    'logger',
     'union',
   ].reduce(
     (globals, keyword) => {

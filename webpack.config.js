@@ -5,7 +5,11 @@ const _ = require('lodash');
 const entries = (
   _(glob.sync('./src/**/*.js'))
     .keyBy((filepath) => filepath.replace(/.\/src\//, '').replace(/\.js/, ''))
-    .mapValues((filepath) => ['./src/lib/bootstrap', filepath])
+    .mapValues((filepath) => [
+      './src/lib/bootstrap',
+      './src/lib/bootstrapWindow',
+      filepath,
+    ])
     .value()
 );
 

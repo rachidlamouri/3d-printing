@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const { logger } = require('./lib/logger');
 const { makeContainer } = require('./lib/makeContainer');
 
 const bottomThickness = 1;

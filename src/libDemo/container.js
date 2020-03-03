@@ -1,4 +1,3 @@
-const { logger } = require('../lib/logger');
 const { makeContainer } = require('../lib/makeContainer');
 
 global.main = () => {

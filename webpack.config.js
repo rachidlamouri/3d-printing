@@ -3,7 +3,7 @@ const glob = require('glob');
 const _ = require('lodash');
 
 const entries = (
-  _(glob.sync('./src/**/*.js'))
+  _(glob.sync('./src/**/*.main.js'))
     .keyBy((filepath) => filepath.replace(/.\/src\//, '').replace(/\.js/, ''))
     .mapValues((filepath) => [
       './src/lib/bootstrap',

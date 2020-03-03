@@ -47,6 +47,11 @@ global.main = () => {
         plateHoleTolerance,
         bottomThickness,
       }),
+      standaloneCardRailMeta: makeCardRail({
+        numberOfCards: 4,
+        baseHeight: 7,
+        baseDepth: 12,
+      }),
       damageContainerMeta: makeDamageContainer({
         numberOfCards: 8,
         baseHeight: bottomThickness,
@@ -73,6 +78,6 @@ global.main = () => {
     },
   });
 
-  const { entity } = metaMap.drawDiscardMeta;
+  const { entity } = metaMap.demoMeta;
   return entity;
 };

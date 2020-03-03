@@ -167,7 +167,7 @@ const createEntity = ({
     ? union(base.cube, verticalGuide.cube)
     : base.cube;
 
-  const entity = difference(
+  const entityWithCardHoles = difference(
     baseEntity,
     ...cardHoles.map((cardHole) => (
       difference(
@@ -175,6 +175,10 @@ const createEntity = ({
         cardBottomCutoff.cube,
       )
     )),
+  );
+
+  const entity = difference(
+    entityWithCardHoles,
     ..._.map(bottomThicknessHoleMetas, 'regularEntity'),
   );
 
@@ -184,6 +188,7 @@ const createEntity = ({
   );
 
   return {
+    entityWithCardHoles,
     entity,
     plateHoleEntity,
     finalDimensions: sizeToMeta(base.size),
@@ -193,8 +198,9 @@ const createEntity = ({
 module.exports.makeCardRail = ({
   numberOfCards = 1,
   baseHeight = 10,
+  baseDepth = 10,
   bottomThickness = 0.6,
-  plateHoleTolerance,
+  plateHoleTolerance = 0,
 }) => {
   const cardAngleDegrees = 70;
   const initialParameters = {
@@ -206,7 +212,7 @@ module.exports.makeCardRail = ({
     miniCardHoleHeight: 1,
     grooveHeight: 6.5,
     baseHeight,
-    baseDepth: 10,
+    baseDepth,
     bottomThickness,
     plateHoleTolerance,
   };

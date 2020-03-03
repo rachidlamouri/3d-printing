@@ -6,8 +6,8 @@ const entries = (
   _(glob.sync('./src/**/*.main.js'))
     .keyBy((filepath) => filepath.replace(/.\/src\//, '').replace(/\.js/, ''))
     .mapValues((filepath) => [
-      './src/lib/bootstrap',
-      './src/lib/bootstrapWindow',
+      './src/bootstrap/bootstrap',
+      './src/bootstrap/bootstrapWindow',
       filepath,
     ])
     .value()

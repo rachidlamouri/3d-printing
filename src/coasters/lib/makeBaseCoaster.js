@@ -2,7 +2,7 @@ const {
   sizeToMeta,
   getNextMultiple,
   assembleMeta,
-} = require('../lib/utils');
+} = require('../../lib/utils');
 
 const deriveDimensions = ({
   outerHeight,

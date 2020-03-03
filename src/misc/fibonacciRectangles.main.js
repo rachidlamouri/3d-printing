@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { makeContainer } = require('./lib/makeContainer');
+const { makeContainer } = require('../lib/makeContainer');
 
 const bottomThickness = 1;
 const height = 20;

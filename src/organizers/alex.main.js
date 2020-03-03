@@ -1,4 +1,4 @@
-const { makeContainer } = require('./lib/makeContainer');
+const { makeContainer } = require('../lib/makeContainer');
 
 global.main = () => {
   const metaMap = {

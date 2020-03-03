@@ -1,5 +1,5 @@
-const { buildMakeContainerWithDefaults } = require('../lib/makeContainer');
-const { buildMakeRepeatContainerWithDefaults } = require('../lib/makeRepeatContainer');
+const { buildMakeContainerWithDefaults } = require('../../lib/makeContainer');
+const { buildMakeRepeatContainerWithDefaults } = require('../../lib/makeRepeatContainer');
 const { makeShims } = require('../lib/makeShims');
 const plan = require('./plan');
 

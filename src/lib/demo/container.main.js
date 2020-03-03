@@ -1,14 +1,13 @@
-const { makeRepeatContainer } = require('../lib/makeRepeatContainer');
+const { makeContainer } = require('../makeContainer');
 
 global.main = () => {
   const {
     container,
     debug,
-  } = makeRepeatContainer({
+  } = makeContainer({
     innerWidth: undefined,
     innerDepth: undefined,
     outerHeight: undefined,
-    count: undefined,
   });
 
   logger.log(debug);

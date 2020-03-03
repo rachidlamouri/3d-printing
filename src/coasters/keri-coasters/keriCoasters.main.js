@@ -1,4 +1,4 @@
-import { makeBaseCoaster } from '../makeBaseCoaster';
+import { makeBaseCoaster } from '../lib/makeBaseCoaster';
 
 global.main = () => {
   const parameters = {

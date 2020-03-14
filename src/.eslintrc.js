@@ -1,6 +1,7 @@
 module.exports = {
   globals: [
     'cube',
+    'cylinder',
     'difference',
     'intersection',
     'logger',

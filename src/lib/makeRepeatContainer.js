@@ -85,10 +85,7 @@ const createOuterContainerMeta = ({
       ignoreDecimalPrecision: true,
     });
 
-    const { widthWallThickness, depthWallThickness } = outerContainerMeta;
-    outerContainerMeta.container = outerContainerMeta.container
-      .translate([-widthWallThickness, -depthWallThickness, 0])
-      .setColor([0, 0, 1]);
+    outerContainerMeta.container = outerContainerMeta.container.setColor([0, 0, 1]);
   }
 
   return {
@@ -101,7 +98,7 @@ const createOuterContainerMeta = ({
   };
 };
 
-const createContainer = ({
+const createEntity = ({
   isSideLengthMultipleSet,
   repeatedEntities,
   outerContainerMeta,
@@ -112,7 +109,11 @@ const createContainer = ({
 
   const container = (
     isSideLengthMultipleSet
-      ? union(unionedRepeatedContainers, outerContainerMeta.container)
+      ? union(
+        unionedRepeatedContainers
+          .translate([outerContainerMeta.widthWallThickness, outerContainerMeta.depthWallThickness, 0]),
+        outerContainerMeta.container,
+      )
       : unionedRepeatedContainers
   );
 
@@ -183,7 +184,7 @@ const makeRepeatContainer = ({
     createRepeatedEntities,
     calculateStartingOuterSize,
     createOuterContainerMeta,
-    createContainer,
+    createEntity,
     createDebug,
   );
 };

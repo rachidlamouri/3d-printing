@@ -34,7 +34,7 @@ const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
 global.main = () => {
   const chapstickDiameter = 16.4;
   const supportBaseSize = 8;
-  const entities = {
+  const metaMap = {
     chapstick: makeContainerWithFlexibleDimensions({
       innerWidth: chapstickDiameter,
       innerDepth: chapstickDiameter,
@@ -82,18 +82,19 @@ global.main = () => {
       bottomClearance: 4,
     }),
     boundingBox: makeContainerWithoutFlexing({
+      wallThickness: 1,
       innerDepth: plan.boundingContainer.withTolerance.height,
       innerWidth: plan.boundingContainer.withTolerance.width,
       bottomClearance: 30,
     }),
-    shims: { container: makeShims(plan.shimGroups) },
+    shims: { entity: makeShims(plan.shimGroups) },
   };
 
   const {
-    container,
+    entity,
     debug,
-  } = entities.shims;
+  } = metaMap.boundingBox;
 
   logger.log(debug);
-  return container;
+  return entity;
 };

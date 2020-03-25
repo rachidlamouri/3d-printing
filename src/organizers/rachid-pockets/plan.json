@@ -49,15 +49,15 @@
       "height": 16
     }
   ],
-  "tolerance": 1.5,
+  "tolerance": 0.5,
   "boundingContainer": {
     "x": 0,
     "y": 0,
     "width": 96,
     "height": 92,
     "withTolerance": {
-      "width": 97.5,
-      "height": 93.5
+      "width": 96.5,
+      "height": 92.5
     }
   },
   "shimGroups": [

@@ -1,3 +1,5 @@
+const { makeContainer } = require('./lib/makeContainer');
+
 global.main = () => {
   const map = {
     firstLayerHeight: cube([40, 40, 0.1]),
@@ -52,7 +54,46 @@ global.main = () => {
         center: true,
       }),
     ),
+    noise: difference(
+      cube({
+        size: [40, 40, 4],
+        center: true,
+      }),
+      cube({
+        size: [38, 38, 4],
+        center: true,
+      }),
+      cube({
+        size: [20, 40, 4],
+        center: true,
+      }),
+      cube({
+        size: [40, 20, 4],
+        center: true,
+      }),
+    ),
+    yAxisNoise: union(
+      cube([2, 10, 2]).translate([0, 70, 0]),
+      cube([2, 10, 2]).translate([0, -70, 0]),
+    ),
+    noise2: difference(
+      cube({
+        size: [80, 80, 4],
+        center: true,
+      }),
+      cube({
+        size: [78, 78, 4],
+        center: true,
+      }),
+    ),
+    noise3: makeContainer({
+      innerWidth: 133,
+      innerDepth: 73,
+      outerHeight: 20,
+      wallThickness: 1,
+      bottomClearance: 0,
+    }).entity,
   };
 
-  return map.elephantsFoot;
+  return map.noise3;
 };

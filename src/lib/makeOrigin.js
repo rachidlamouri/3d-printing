@@ -1,3 +1,8 @@
+const {
+  primitives3d: { cube },
+  booleanOps: { union },
+} = require('@jscad/csg/api');
+
 const size = [1, 1, 20];
 
 module.exports.makeOrigin = () => ({

@@ -1,6 +1,6 @@
-import { makeBaseCoaster } from '../lib/makeBaseCoaster';
+const { makeBaseCoaster } = require('../lib/makeBaseCoaster');
 
-global.main = () => {
+module.exports.main = () => {
   const parameters = {
     outerHeight: 4,
     corkHeight: 2.032,

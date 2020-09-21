@@ -1,3 +1,7 @@
+const {
+  primitives3d: { cube },
+  booleanOps: { difference },
+} = require('@jscad/csg/api');
 const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const {

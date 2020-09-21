@@ -1,6 +1,10 @@
+const {
+  primitives3d: { cube, cylinder },
+  booleanOps: { difference, union },
+} = require('@jscad/csg/api');
 const { makeContainer } = require('./lib/makeContainer');
 
-global.main = () => {
+module.exports.main = () => {
   const map = {
     firstLayerHeight: cube([40, 40, 0.1]),
     perimeterWidth: difference(

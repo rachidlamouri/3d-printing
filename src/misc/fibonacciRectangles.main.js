@@ -1,3 +1,7 @@
+const {
+  primitives3d: { cube },
+  booleanOps: { union },
+} = require('@jscad/csg/api');
 const _ = require('lodash');
 const { makeContainer } = require('../lib/makeContainer');
 
@@ -40,7 +44,7 @@ const getNextDirection = ([direction]) => (
     : ['up', 0, 1]
 );
 
-global.main = () => {
+module.exports.main = () => {
   const { sequence, rectangles } = _.range(count).reduce(
     ({ sequence, rectangles, directionTuple }, index) => { // eslint-disable-line no-shadow
       const nextNumber = (
@@ -86,8 +90,6 @@ global.main = () => {
     minBottomHoleSideLength: 0,
     bottomClearance: Infinity,
   });
-
-  logger.log(sequence);
 
   return union(
     container.translate([0, lastLength + (printSpaceTolerance * 12), 0]),

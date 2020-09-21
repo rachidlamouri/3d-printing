@@ -1,3 +1,4 @@
+const { csg: { CSG } } = require('@jscad/csg/api');
 const { expect } = require('chai');
 const { makeRepeatContainer } = require('../../src/lib/makeRepeatContainer');
 
@@ -24,7 +25,7 @@ describe('makeRepeatContainer', function () {
     });
 
     it('returns the container', function () {
-      expect(this.containerMeta.container).to.be.an.instanceof(OpenJscadObject);
+      expect(this.containerMeta.container).to.be.an.instanceof(CSG);
     });
 
     it('returns debug information', function () {

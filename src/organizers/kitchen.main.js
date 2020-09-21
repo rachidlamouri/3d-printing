@@ -17,7 +17,7 @@ const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
   ...defaults,
 });
 
-global.main = () => {
+module.exports.main = () => {
   const metaMap = {
     measuringCups: makeContainer({
       innerWidth: 160,
@@ -37,10 +37,8 @@ global.main = () => {
   };
 
   const {
-    debug,
     entity,
   } = metaMap.chipClips;
 
-  logger.log(debug);
   return entity;
 };

@@ -1,6 +1,6 @@
 const { makeContainer } = require('../lib/makeContainer');
 
-global.main = () => {
+module.exports.main = () => {
   const metaMap = {
     oof: makeContainer({
       innerWidth: 35,

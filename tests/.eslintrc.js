@@ -6,9 +6,6 @@ module.exports = {
   plugins: [
     'mocha',
   ],
-  globals: {
-    OpenJscadObject: 'readonly',
-  },
   rules: {
     'func-names': 'off',
     'mocha/no-exclusive-tests': 'error',

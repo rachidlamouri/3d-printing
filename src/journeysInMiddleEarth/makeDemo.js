@@ -1,3 +1,7 @@
+const {
+  primitives3d: { cube },
+  booleanOps: { difference, union, intersection },
+} = require('@jscad/csg/api');
 const _ = require('lodash');
 const { makeOrigin } = require('../lib/makeOrigin');
 const {

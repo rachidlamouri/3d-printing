@@ -1,4 +1,8 @@
 const {
+  primitives3d: { cube },
+  booleanOps: { difference, union },
+} = require('@jscad/csg/api');
+const {
   sizeToMeta,
   getNextMultiple,
   assembleMeta,

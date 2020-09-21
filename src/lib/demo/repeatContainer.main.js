@@ -1,9 +1,8 @@
 const { makeRepeatContainer } = require('../makeRepeatContainer');
 
-global.main = () => {
+module.exports.main = () => {
   const {
     container,
-    debug,
   } = makeRepeatContainer({
     innerWidth: undefined,
     innerDepth: undefined,
@@ -11,6 +10,5 @@ global.main = () => {
     count: undefined,
   });
 
-  logger.log(debug);
   return container;
 };

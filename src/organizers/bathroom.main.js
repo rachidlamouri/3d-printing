@@ -17,7 +17,7 @@ const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
   ...defaults,
 });
 
-global.main = () => {
+module.exports.main = () => {
   const metaMap = {
     ibuprofen: makeContainer({
       innerWidth: 108,
@@ -71,10 +71,8 @@ global.main = () => {
   };
 
   const {
-    debug,
     entity,
   } = metaMap.sewingKit;
 
-  logger.log(debug);
   return entity;
 };

@@ -1,15 +1,13 @@
 const { makeContainer } = require('../makeContainer');
 
-global.main = () => {
+module.exports.main = () => {
   const {
     container,
-    debug,
   } = makeContainer({
     innerWidth: undefined,
     innerDepth: undefined,
     outerHeight: undefined,
   });
 
-  logger.log(debug);
   return container;
 };

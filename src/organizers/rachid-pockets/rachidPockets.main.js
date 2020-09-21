@@ -31,7 +31,7 @@ const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
   dividerThickness: defaultWallThickness,
 });
 
-global.main = () => {
+module.exports.main = () => {
   const chapstickDiameter = 16.4;
   const supportBaseSize = 8;
   const metaMap = {
@@ -92,9 +92,7 @@ global.main = () => {
 
   const {
     entity,
-    debug,
   } = metaMap.boundingBox;
 
-  logger.log(debug);
   return entity;
 };

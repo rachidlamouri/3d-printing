@@ -1,3 +1,7 @@
+const {
+  primitives3d: { cube },
+  booleanOps: { difference, union },
+} = require('@jscad/csg/api');
 const _ = require('lodash');
 const { miniCard } = require('./lotrConstants');
 const {

@@ -17,7 +17,7 @@ const makeContainerWithFlexibleWalls = buildMakeContainerWithDefaults({
   minWallThickness: defaultWallThickness,
 });
 
-global.main = () => {
+module.exports.main = () => {
   const metaMap = {
     electricalTape: makeContainerWithFlexibleDimensions({
       innerWidth: 55,
@@ -170,9 +170,7 @@ global.main = () => {
 
   const {
     entity,
-    debug,
   } = metaMap.powerDrill;
 
-  logger.log(debug);
   return entity;
 };

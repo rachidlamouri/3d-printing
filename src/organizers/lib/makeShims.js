@@ -1,3 +1,7 @@
+const {
+  primitives3d: { cube },
+  booleanOps: { union },
+} = require('@jscad/csg/api');
 const _ = require('lodash');
 
 module.exports.makeShims = (shimGroups = [], index = null) => {

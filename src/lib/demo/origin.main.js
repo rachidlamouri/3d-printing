@@ -1,3 +1,3 @@
 const { makeOrigin } = require('../makeOrigin');
 
-global.main = () => makeOrigin().entity;
+module.exports.main = () => makeOrigin().entity;

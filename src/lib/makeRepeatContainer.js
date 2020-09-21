@@ -1,3 +1,6 @@
+const {
+  booleanOps: { union },
+} = require('@jscad/csg/api');
 const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const {

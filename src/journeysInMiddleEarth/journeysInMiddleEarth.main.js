@@ -4,7 +4,7 @@ const { makeCardBank } = require('./makeCardBank');
 const { makePlayerCard } = require('./makePlayerCard');
 const { makeDemo } = require('./makeDemo');
 
-global.main = () => {
+module.exports.main = () => {
   const wallThickness = 0.8;
   const plateHoleTolerance = 0.5;
   const bottomThickness = 1.4;

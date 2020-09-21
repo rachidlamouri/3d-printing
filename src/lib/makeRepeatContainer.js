@@ -2,7 +2,6 @@ const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const {
   requiredPositiveInteger,
-  requiredBoolean,
   validateParameters,
 } = require('./validation');
 const {
@@ -55,14 +54,17 @@ const createRepeatedEntities = ({
 };
 
 const calculateStartingOuterSize = ({
+  sideLengthMultiple,
   repeatedEntities,
 }) => {
   const lastRepeatedEntity = _.last(repeatedEntities);
   const { xOffset, containerMeta: { outerWidth, outerDepth, outerHeight } } = lastRepeatedEntity;
-  const startingOuterSize = [xOffset + outerWidth, outerDepth, outerHeight];
+  const finalOuterWidth = xOffset + outerWidth;
+  const startingOuterSize = [finalOuterWidth, outerDepth, outerHeight];
 
   return {
     startingOuterSize,
+    isSideLengthMultipleSet: sideLengthMultiple !== null && finalOuterWidth % sideLengthMultiple !== 0 && outerDepth % sideLengthMultiple !== 0,
   };
 };
 
@@ -163,7 +165,6 @@ const makeRepeatContainer = ({
     bottomClearance,
     count,
     sideLengthMultiple,
-    isSideLengthMultipleSet: sideLengthMultiple !== null,
   };
 
   validateParameters(parameters, extraParameters, {
@@ -176,7 +177,6 @@ const makeRepeatContainer = ({
     bottomClearance: Joi.any(),
     count: requiredPositiveInteger(),
     sideLengthMultiple: requiredPositiveInteger().allow(null),
-    isSideLengthMultipleSet: requiredBoolean(),
   });
 
   return assembleMeta(

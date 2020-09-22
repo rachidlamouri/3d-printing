@@ -22,7 +22,10 @@ const update = (filepath) => {
       .replace(/\//g, '__')
       .replace(/src__/, 'build/')
       .replace(/\.main.js/, extension);
-    const result = execSync(`"node_modules/.bin/openjscad" ${filepath} -o ${output}`);
+
+    const command = `"node_modules/.bin/openjscad" ${filepath} -o ${output}`;
+    console.log(command); // eslint-disable-line no-console
+    const result = execSync(command);
     console.log(result.toString().replace('\n', '')); // eslint-disable-line no-console
   });
   console.log(); // eslint-disable-line no-console

@@ -35,12 +35,12 @@ module.exports.main = () => {
       outerHeight: 20,
     }),
     thumbtack: makeContainer({
-      innerWidth: 8.8,
-      innerDepth: 8.8,
-      outerHeight: 16,
+      innerWidth: 20,
+      innerDepth: 20,
+      outerHeight: 10,
       minBottomHoleSideLength: 0,
     }),
   };
 
-  return metaMap.chipClips.entity;
+  return metaMap.thumbtack.entity;
 };

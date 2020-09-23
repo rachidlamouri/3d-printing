@@ -34,11 +34,13 @@ module.exports.main = () => {
       innerDepth: 85,
       outerHeight: 20,
     }),
+    thumbtack: makeContainer({
+      innerWidth: 8.8,
+      innerDepth: 8.8,
+      outerHeight: 16,
+      minBottomHoleSideLength: 0,
+    }),
   };
 
-  const {
-    entity,
-  } = metaMap.chipClips;
-
-  return entity;
+  return metaMap.chipClips.entity;
 };

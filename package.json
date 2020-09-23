@@ -1,7 +1,7 @@
 {
   "scripts": {
     "clean": "rm -rf ./build/",
-    "build": "npm run clean && node build",
+    "build": "node build",
     "build:watch": "npm run build -- --watch",
     "lint": "eslint --color .",
     "test": "mocha ./tests/**/*.test.js"

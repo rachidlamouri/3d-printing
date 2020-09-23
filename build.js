@@ -9,19 +9,25 @@ if (!fs.existsSync('build/')) {
   fs.mkdirSync('build/');
 }
 
-const filepaths = glob.sync('./src/**/*.main.js');
+const filepaths = [
+  ...glob.sync('./src/**/*.main.js'),
+  ...glob.sync('./src/**/*.object.js'),
+  ...glob.sync('./src/**/*.demo.js'),
+];
 console.log('Found:', filepaths); // eslint-disable-line no-console
 
 const update = (filepath) => {
-  [
-    '.amf',
-    '.stl',
-  ].forEach((extension) => {
+  const supportedFileTypes = filepath.endsWith('.demo.js')
+    ? ['.amf']
+    : ['.amf', '.stl'];
+
+  supportedFileTypes.forEach((extension) => {
     const output = filepath
       .replace(/\.\//, '')
       .replace(/\//g, '__')
       .replace(/src__/, 'build/')
-      .replace(/\.main.js/, extension);
+      .replace(/\.(main|object).js/, extension)
+      .replace(/\.demo.js/, `.demo.${extension}`);
 
     const command = `"node_modules/.bin/openjscad" ${filepath} -o ${output}`;
     console.log(command); // eslint-disable-line no-console
@@ -41,6 +47,8 @@ if (arg === '--watch') {
       debouncedUpdate(filepath);
     });
   });
-}
 
-filepaths.forEach(update);
+  console.log('Watching ...'); // eslint-disable-line no-console
+} else {
+  filepaths.forEach(update);
+}

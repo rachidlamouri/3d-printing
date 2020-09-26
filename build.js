@@ -2,6 +2,7 @@ const { execSync } = require('child_process');
 const glob = require('glob');
 const _ = require('lodash');
 const fs = require('fs');
+const path = require('path');
 
 const [arg] = process.argv.slice(2);
 
@@ -23,16 +24,23 @@ const update = (filepath) => {
     : ['.amf', '.stl'];
 
   if (filepath.endsWith('.map.js')) {
+    const cacheId = path.join(__dirname, filepath);
+    delete require.cache[cacheId];
     const { objectNames } = require(filepath); // eslint-disable-line import/no-dynamic-require, global-require
+
+    const subfolder = filepath
+      .replace(/\.\//, '')
+      .replace(/\//g, '_')
+      .replace(/src_/, 'build/')
+      .replace(/\.map.js/, '/');
+
+    if (!fs.existsSync(subfolder)) {
+      fs.mkdirSync(subfolder);
+    }
 
     objectNames.forEach((objectName) => {
       supportedFileTypes.forEach((extension) => {
-        const output = filepath
-          .replace(/\.\//, '')
-          .replace(/\//g, '__')
-          .replace(/src__/, 'build/')
-          .replace(/\.map.js/, `.${objectName}${extension}`);
-
+        const output = `${subfolder}${objectName}${extension}`;
         const command = `"node_modules/.bin/openjscad" ${filepath} --name ${objectName} -o ${output}`;
         console.log(command); // eslint-disable-line no-console
         const result = execSync(command);

@@ -1,3 +1,7 @@
+const {
+  primitives3d: { cylinder },
+  booleanOps: { difference },
+} = require('@jscad/csg/api');
 const { buildMakeContainerWithDefaults } = require('../lib/makeContainer');
 
 const defaultWallThickness = 1;
@@ -95,6 +99,21 @@ const map = {
     innerWidth: 12,
     innerDepth: 12,
     outerHeight: 50,
+  }),
+  exactoKnifeCover: () => ({
+    entity: difference(
+      cylinder({
+        d: 14,
+        h: 50,
+        center: [true, true, false],
+      }),
+      cylinder({
+        d: 12,
+        h: 50,
+        center: [true, true, false],
+      })
+        .translate([0, 0, 1]),
+    ),
   }),
   files: () => makeContainerWithFlexibleWalls({
     innerWidth: 90,

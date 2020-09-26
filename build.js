@@ -10,6 +10,7 @@ if (!fs.existsSync('build/')) {
 }
 
 const filepaths = [
+  ...glob.sync('./src/**/*.map.js'),
   ...glob.sync('./src/**/*.main.js'),
   ...glob.sync('./src/**/*.object.js'),
   ...glob.sync('./src/**/*.demo.js'),
@@ -20,6 +21,27 @@ const update = (filepath) => {
   const supportedFileTypes = filepath.endsWith('.demo.js')
     ? ['.amf']
     : ['.amf', '.stl'];
+
+  if (filepath.endsWith('.map.js')) {
+    const { objectNames } = require(filepath); // eslint-disable-line import/no-dynamic-require, global-require
+
+    objectNames.forEach((objectName) => {
+      supportedFileTypes.forEach((extension) => {
+        const output = filepath
+          .replace(/\.\//, '')
+          .replace(/\//g, '__')
+          .replace(/src__/, 'build/')
+          .replace(/\.map.js/, `.${objectName}${extension}`);
+
+        const command = `"node_modules/.bin/openjscad" ${filepath} --name ${objectName} -o ${output}`;
+        console.log(command); // eslint-disable-line no-console
+        const result = execSync(command);
+        console.log(result.toString().replace('\n', '')); // eslint-disable-line no-console
+      });
+    });
+
+    return;
+  }
 
   supportedFileTypes.forEach((extension) => {
     const output = filepath

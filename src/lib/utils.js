@@ -35,6 +35,7 @@ const runWithDefaults = (entityFunction, defaults, parameters) => entityFunction
 const buildBuildWithDefaults = _.curry(runWithDefaults);
 
 module.exports = {
+  center: [true, true, false],
   sizeToMeta,
   positionToMeta,
   getNextMultiple,

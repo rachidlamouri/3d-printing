@@ -1,8 +1,3 @@
-const {
-  primitives3d: { cube },
-  booleanOps: { difference, union },
-} = require('@jscad/csg/api');
-const { center } = require('../lib/utils');
 const { buildMakeContainerWithDefaults } = require('../lib/makeContainer');
 
 const defaultWallThickness = 1;
@@ -30,41 +25,6 @@ const map = {
     innerDepth: 13.6,
     outerHeight: containerHeight,
   }),
-  boxInsert: () => {
-    const outerWidth = 193;
-    const outerDepth = 147;
-    const height = 0.3;
-    const wallThickness = 3;
-
-    const outerPerimeter = difference(
-      cube({
-        size: [outerWidth, outerDepth, height],
-        center,
-      }),
-      cube({
-        size: [outerWidth - 2 * wallThickness, outerDepth - 2 * wallThickness, height],
-        center,
-      }),
-    );
-
-    const widthSpanningDivider = cube({
-      size: [outerWidth, wallThickness, height],
-      center,
-    });
-
-    const depthSpanningDivider = cube({
-      size: [wallThickness, outerDepth, height],
-      center,
-    });
-
-    const entity = union(
-      outerPerimeter,
-      widthSpanningDivider,
-      depthSpanningDivider,
-    );
-
-    return { entity };
-  },
 };
 
 const getParameterDefinitions = () => [

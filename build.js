@@ -26,7 +26,13 @@ const update = (filepath) => {
   if (filepath.endsWith('.map.js')) {
     const cacheId = path.join(__dirname, filepath);
     delete require.cache[cacheId];
-    const { objectNames } = require(filepath); // eslint-disable-line import/no-dynamic-require, global-require
+    let objectNames;
+    try {
+      ({ objectNames } = require(filepath)); // eslint-disable-line import/no-dynamic-require, global-require
+    } catch (error) {
+      console.log(error); // eslint-disable-line no-console
+      return;
+    }
 
     const subfolder = filepath
       .replace(/\.\//, '')

@@ -1,6 +1,6 @@
 const {
   primitives3d: { cube, cylinder },
-  booleanOps: { difference },
+  booleanOps: { difference, union },
 } = require('@jscad/csg/api');
 const _ = require('lodash');
 const { center, resolution } = require('../lib/utils');
@@ -8,9 +8,9 @@ const { center, resolution } = require('../lib/utils');
 const makeCup = (height) => {
   const wallThickness = 1;
   const bottomThickness = 0.3;
-  const bottomDiameter = 63;
-  const maxHeight = 96;
-  const maxTopDiameter = 82;
+  const bottomDiameter = 64;
+  const maxHeight = 95;
+  const maxTopDiameter = 86;
 
   /*
             length
@@ -70,11 +70,13 @@ const makeCup = (height) => {
       .rotateZ(index * (180 / holeCubeCount) + (level % 2) * (angleBetweenHoles / 2))
   )));
 
+  const combinedOuterHoles = union(...outerHoles.flat());
+
   return difference(
     outerCylinder,
     innerCylinder,
     bottomHole,
-    ...outerHoles.flat(),
+    combinedOuterHoles,
   );
 };
 

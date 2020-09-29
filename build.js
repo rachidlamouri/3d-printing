@@ -14,7 +14,6 @@ const filepaths = [
   ...glob.sync('./src/**/*.map.js'),
   ...glob.sync('./src/**/*.main.js'),
   ...glob.sync('./src/**/*.object.js'),
-  ...glob.sync('./src/**/*.demo.js'),
 ];
 console.log('Found:', filepaths); // eslint-disable-line no-console
 
@@ -58,12 +57,19 @@ const update = (filepath) => {
   }
 
   supportedFileTypes.forEach((extension) => {
-    const output = filepath
+    const filename = path.basename(filepath);
+    const [objectName] = filename.split('.');
+    const subfolder = filepath
       .replace(/\.\//, '')
-      .replace(/\//g, '__')
-      .replace(/src__/, 'build/')
-      .replace(/\.(main|object).js/, extension)
-      .replace(/\.demo.js/, `.demo.${extension}`);
+      .replace(/\//g, '_')
+      .replace(/src_/, 'build/')
+      .replace(new RegExp(`_${filename}`), '/');
+
+    if (!fs.existsSync(subfolder)) {
+      fs.mkdirSync(subfolder);
+    }
+
+    const output = `${subfolder}${objectName}${extension}`;
 
     const command = `"node_modules/.bin/openjscad" ${filepath} -o ${output}`;
     console.log(command); // eslint-disable-line no-console

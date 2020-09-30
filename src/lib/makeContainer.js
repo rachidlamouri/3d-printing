@@ -310,7 +310,7 @@ const makeContainer = ({
   validateParameters(parameters, extraParameters, {
     innerWidth: requiredInnerDimension(),
     innerDepth: requiredInnerDimension(),
-    outerHeight: requiredPositiveInteger(),
+    outerHeight: () => Joi.number().greater(0).precision(1).required(),
     sideLengthMultiple: requiredPositiveInteger().allow(null),
     isSideLengthMultipleSet: requiredBoolean(),
     minWallThickness: requiredPositiveNumber(),

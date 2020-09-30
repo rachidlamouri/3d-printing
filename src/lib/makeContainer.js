@@ -242,6 +242,7 @@ const createContainer = ({
   return {
     container,
     entity: container,
+    csg: container,
   };
 };
 

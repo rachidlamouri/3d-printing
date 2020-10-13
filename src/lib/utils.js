@@ -36,7 +36,7 @@ const buildBuildWithDefaults = _.curry(runWithDefaults);
 
 module.exports = {
   center: [true, true, false],
-  resolution: 128,
+  resolution: 64,
   sizeToMeta,
   positionToMeta,
   getNextMultiple,

@@ -4,6 +4,7 @@ const {
 } = require('@jscad/csg/api');
 const { buildMakeContainerWithDefaults } = require('../lib/makeContainer');
 const { buildMakeRepeatContainerWithDefaults } = require('../lib/makeRepeatContainer');
+const { center } = require('../lib/utils');
 
 const defaultWallThickness = 1;
 const defaults = {
@@ -21,7 +22,70 @@ const makeRepeatContainer = buildMakeRepeatContainerWithDefaults({
   ...defaults,
 });
 
-const avocondoWallThickness = 6;
+const avocondoWallThickness = 4;
+
+const avocondoClips = () => {
+  const allowance = 0.2;
+  const wallThickness = 0.8;
+  const wallHeight = 6;
+  const baseHeight = 2;
+
+  const lowerArmDepth = 2 * wallThickness + avocondoWallThickness + allowance;
+  const lowerArmWidth = 20;
+  const fullBaseSideLength = lowerArmWidth + lowerArmDepth;
+
+  const base = difference(
+    cube([fullBaseSideLength, fullBaseSideLength, baseHeight]),
+    cube([lowerArmWidth, lowerArmWidth, baseHeight])
+      .translate([lowerArmDepth, lowerArmDepth]),
+  );
+
+  const outerWall = difference(
+    cube([fullBaseSideLength, fullBaseSideLength, wallHeight]),
+    cube([fullBaseSideLength - wallThickness, fullBaseSideLength - wallThickness, wallHeight])
+      .translate([wallThickness, wallThickness]),
+  )
+    .translate([0, 0, baseHeight]);
+
+  const innerWall = difference(
+    cube([lowerArmWidth + wallThickness, lowerArmWidth + wallThickness, wallHeight]),
+    cube([lowerArmWidth, lowerArmWidth, wallHeight])
+      .translate([wallThickness, wallThickness]),
+  )
+    .translate([wallThickness + avocondoWallThickness + allowance, wallThickness + avocondoWallThickness + allowance, baseHeight]);
+
+  const cornerClip = union(
+    base,
+    outerWall,
+    innerWall,
+  );
+
+  const crossClipA = difference(
+    union(
+      cornerClip,
+      cornerClip
+        .rotateZ(180)
+        .translate([2 * wallThickness, 2 * wallThickness]),
+    ),
+    cube([wallThickness, wallThickness, wallHeight])
+      .translate([0, 0, baseHeight]),
+    cube([wallThickness, wallThickness, wallHeight])
+      .translate([wallThickness, wallThickness, baseHeight]),
+  );
+
+  const crossClip = difference(
+    crossClipA.center(center),
+    cube([wallThickness, wallThickness, wallHeight])
+      .rotateZ(45)
+      .center(center)
+      .translate([0, 0, baseHeight]),
+  );
+
+  return {
+    cornerClip: { entity: cornerClip },
+    crossClip: { entity: crossClip },
+  };
+};
 
 const map = {
   avocondo: () => {
@@ -54,44 +118,8 @@ const map = {
 
     return { entity };
   },
-  avocondoClip: () => {
-    const tolerance = 0.1;
-    const wallThickness = 1;
-    const wallHeight = 5;
-    const baseHeight = 0.2;
-
-    const lowerArmDepth = 2 * wallThickness + avocondoWallThickness + tolerance;
-    const lowerArmWidth = 20;
-    const fullBaseSideLength = lowerArmWidth + lowerArmDepth;
-
-    const base = difference(
-      cube([fullBaseSideLength, fullBaseSideLength, baseHeight]),
-      cube([lowerArmWidth, lowerArmWidth, baseHeight])
-        .translate([lowerArmDepth, lowerArmDepth]),
-    );
-
-    const outerWall = difference(
-      cube([fullBaseSideLength, fullBaseSideLength, wallHeight]),
-      cube([fullBaseSideLength - wallThickness, fullBaseSideLength - wallThickness, wallHeight])
-        .translate([wallThickness, wallThickness]),
-    )
-      .translate([0, 0, baseHeight]);
-
-    const innerWall = difference(
-      cube([lowerArmWidth + wallThickness, lowerArmWidth + wallThickness, wallHeight]),
-      cube([lowerArmWidth, lowerArmWidth, wallHeight])
-        .translate([wallThickness, wallThickness]),
-    )
-      .translate([wallThickness + avocondoWallThickness + tolerance, wallThickness + avocondoWallThickness + tolerance, baseHeight]);
-
-    const entity = union(
-      base,
-      outerWall,
-      innerWall,
-    );
-
-    return { entity };
-  },
+  avocondoCornerClip: () => avocondoClips().cornerClip,
+  avocondoCrossClip: () => avocondoClips().crossClip,
   measuringCups: () => makeContainer({
     innerWidth: 160,
     innerDepth: 90,
@@ -119,10 +147,10 @@ const getParameterDefinitions = () => [
   { name: 'name', type: 'text' },
 ];
 
-const main = ({ name }) => map[name]().entity;
+const main = ({ name }) => map[name]().entity.center(center);
 
 module.exports = {
-  objectNames: Object.keys(map).filter((a) => a.startsWith('avo')),
+  objectNames: Object.keys(map),
   getParameterDefinitions,
   main,
 };

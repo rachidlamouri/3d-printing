@@ -61,9 +61,9 @@ const update = (filepath) => {
     const [objectName] = filename.split('.');
     const subfolder = filepath
       .replace(/\.\//, '')
+      .replace(new RegExp(`${filename}`), '')
       .replace(/\//g, '_')
-      .replace(/src_/, 'build/')
-      .replace(new RegExp(`_${filename}`), '/');
+      .replace(/^src_/, 'build/');
 
     if (!fs.existsSync(subfolder)) {
       fs.mkdirSync(subfolder);
@@ -72,9 +72,9 @@ const update = (filepath) => {
     const output = `${subfolder}${objectName}${extension}`;
 
     const command = `"node_modules/.bin/openjscad" ${filepath} -o ${output}`;
-    console.log(command); // eslint-disable-line no-console
+    console.log(`  ${command}`); // eslint-disable-line no-console
     const result = execSync(command);
-    console.log(result.toString().replace('\n', '')); // eslint-disable-line no-console
+    console.log(`    ${result.toString().replace('\n', '').replace(' -> ', '\n    -> ')}`); // eslint-disable-line no-console
   });
   console.log(); // eslint-disable-line no-console
 };

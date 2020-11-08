@@ -19,28 +19,30 @@ module.exports.main = () => {
     height: 3,
     allowance: {
       diameter: 1,
-      height: 0.1,
+      height: 1,
     },
   });
 
   const wallThickness = 2;
-  const thicknessBetweenMagnetAndPaper = 1;
+  const bottomThickness = 2;
   const base = new Cube({
     width: labelHole.width,
     depth: labelHole.depth + wallThickness,
-    height: magnetHole.height + thicknessBetweenMagnetAndPaper + labelHole.height + braceHole.height,
+    height: bottomThickness + magnetHole.height + labelHole.height + braceHole.height,
   });
 
   const fridgeMagnet = base
     .centerToOrigin()
-    .difference(magnetHole.centerToOrigin())
     .difference(
+      magnetHole
+        .centerToOrigin()
+        .translateZ(bottomThickness - magnetHole.heightAllowance),
       labelHole
         .centerToOrigin()
-        .translateZ(magnetHole.height + thicknessBetweenMagnetAndPaper),
+        .translateZ(bottomThickness + magnetHole.height),
       braceHole
         .centerToOrigin()
-        .translateZ(magnetHole.height + thicknessBetweenMagnetAndPaper + labelHole.height),
+        .translateZ(bottomThickness + magnetHole.height + labelHole.height),
     );
 
   return fridgeMagnet.csg;

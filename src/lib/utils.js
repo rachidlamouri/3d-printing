@@ -62,6 +62,11 @@ class CsgMeta {
     ));
   }
 
+  translateX(width) {
+    this.csg = this.csg.translate([width, 0]);
+    return this;
+  }
+
   translateZ(height) {
     this.csg = this.csg.translate([0, 0, height]);
     return this;

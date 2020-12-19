@@ -33,9 +33,14 @@ const positionToMeta = (position) => {
 // TODO: track centerPosition
 // TODO: track cornerPosition
 class CsgMeta {
-  constructor(csg) {
+  constructor(csgOrCsgMeta) {
+    if (csgOrCsgMeta instanceof CsgMeta) {
+      _.assign(this, csgOrCsgMeta);
+      return;
+    }
+
     _.assign(this, {
-      csg,
+      csg: csgOrCsgMeta,
     });
   }
 
@@ -185,6 +190,7 @@ module.exports = {
   Cube,
   Cylinder,
   Trapezoid,
+  CsgMeta,
   positionToMeta,
   getNextMultiple,
   assembleMeta,

@@ -125,6 +125,7 @@ const createEntity = ({
   return {
     container,
     entity: container,
+    csg: container,
   };
 };
 

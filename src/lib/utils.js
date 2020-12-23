@@ -44,6 +44,10 @@ class CsgMeta {
     });
   }
 
+  static union(...csgMetas) {
+    return new CsgMeta(union(..._.map(csgMetas, 'csg')));
+  }
+
   centerToOrigin() {
     this.csg = this.csg.center([true, true, false]);
     return this;
@@ -69,6 +73,11 @@ class CsgMeta {
 
   translateX(width) {
     this.csg = this.csg.translate([width, 0]);
+    return this;
+  }
+
+  translateY(depth) {
+    this.csg = this.csg.translate([0, depth]);
     return this;
   }
 

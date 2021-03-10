@@ -14,6 +14,7 @@ const filepaths = [
   ...glob.sync('./src/**/*.map.js'),
   ...glob.sync('./src/**/*.main.js'),
   ...glob.sync('./src/**/*.object.js'),
+  ...glob.sync('./build/src/**/*.map.js'),
 ];
 console.log('Found:', filepaths); // eslint-disable-line no-console
 
@@ -34,6 +35,7 @@ const update = (filepath) => {
     }
 
     const subfolder = filepath
+      .replace(/^\.\/build\/src\//, 'src/')
       .replace(/\.\//, '')
       .replace(/\//g, '_')
       .replace(/src_/, 'build/')

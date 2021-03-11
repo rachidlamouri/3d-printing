@@ -7,12 +7,12 @@ import { buildExportsForMap } from './typedUtils';
 
 const map = {
   csg: () => (
-    new CsgWrapper(cube([10, 10, 2]))
-      .center()
+    new CsgWrapper({ csg: cube([10, 10, 2]) })
+      .centerXY()
       .union(
-        new CsgWrapper(cylinder({ h: 10, d: 2 }))
+        new CsgWrapper({ csg: cylinder({ h: 10, d: 2 }) })
           .translateZ(2)
-          .center()
+          .centerXY()
       )
   ),
   rectPrism: () => new RectPrism({

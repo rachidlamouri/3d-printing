@@ -19,9 +19,7 @@ const filepaths = [
 console.log('Found:', filepaths); // eslint-disable-line no-console
 
 const update = (filepath) => {
-  const supportedFileTypes = filepath.endsWith('.demo.js')
-    ? ['.amf']
-    : ['.amf', '.stl'];
+  const supportedFileTypes = ['.stl'];
 
   if (filepath.endsWith('.map.js')) {
     const cacheId = path.join(__dirname, filepath);

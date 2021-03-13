@@ -8,7 +8,7 @@ export enum ExpandStrategy {
   wall = 'wall',
 }
 
-interface ContainerOptions {
+export interface ContainerOptions {
   innerLength?: number,
   innerWidth?: number,
   innerDepth?: number,
@@ -21,9 +21,9 @@ interface ContainerOptions {
   wallThickness?: number,
   wallThicknessX?: number,
   wallThicknessY?: number,
-  expand?: ExpandStrategy,
-  expandX?: ExpandStrategy,
-  expandY?: ExpandStrategy,
+  expandStrategy?: ExpandStrategy,
+  expandStrategyX?: ExpandStrategy,
+  expandStrategyY?: ExpandStrategy,
   baseHoleLength?: number,
   baseHoleWidth?: number,
   baseHoleDepth?: number,
@@ -53,9 +53,9 @@ export class Container extends CsgWrapper {
     wallThickness = 0.8,
     wallThicknessX = wallThickness,
     wallThicknessY = wallThickness,
-    expand = ExpandStrategy.none,
-    expandX = expand,
-    expandY = expand,
+    expandStrategy = ExpandStrategy.none,
+    expandStrategyX = expandStrategy,
+    expandStrategyY = expandStrategy,
     baseHoleLength = 0,
     baseHoleWidth = baseHoleLength,
     baseHoleDepth = baseHoleLength,
@@ -98,33 +98,33 @@ export class Container extends CsgWrapper {
         throw Error('at least one of "innerWidth", "outerWidth", "widthMultiple" must be provided');
       }
 
-      if (hasInnerWidth && !hasOuterWidth && !hasWidthMultiple && expandX !== ExpandStrategy.none) {
-        throw Error('"expandX" must be "none" when only "innerWidth" is provided');
+      if (hasInnerWidth && !hasOuterWidth && !hasWidthMultiple && expandStrategyX !== ExpandStrategy.none) {
+        throw Error('"expandStrategyX" must be "none" when only "innerWidth" is provided');
       }
 
       if (hasOuterWidth && hasWidthMultiple && !_.isInteger(outerWidth / widthMultiple)) {
         throw Error('"outerWidth" is not a multiple of "widthMultiple');
       }
 
-      if (!hasInnerWidth && (hasOuterWidth || hasWidthMultiple) && expandX !== ExpandStrategy.inside) {
-        throw Error('"expandX" must be "inside" when "innerWidth" is not provided');
+      if (!hasInnerWidth && (hasOuterWidth || hasWidthMultiple) && expandStrategyX !== ExpandStrategy.inside) {
+        throw Error('"expandStrategyX" must be "inside" when "innerWidth" is not provided');
       }
 
-      if (hasInnerWidth && hasOuterWidth && expandX === ExpandStrategy.none && (innerWidth + 2 * wallThicknessX) !== outerWidth) {
-        throw Error('invalid "innerWidth", "wallThicknessX", "outerWidth" combination for "expandX" set to "none". Either change "expandX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+      if (hasInnerWidth && hasOuterWidth && expandStrategyX === ExpandStrategy.none && (innerWidth + 2 * wallThicknessX) !== outerWidth) {
+        throw Error('invalid "innerWidth", "wallThicknessX", "outerWidth" combination for "expandStrategyX" set to "none". Either change "expandStrategyX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
       }
 
-      if (hasInnerWidth && !hasOuterWidth && hasWidthMultiple && expandX === ExpandStrategy.none) {
+      if (hasInnerWidth && !hasOuterWidth && hasWidthMultiple && expandStrategyX === ExpandStrategy.none) {
         const providedWidth = innerWidth + 2 * wallThicknessX;
         if(providedWidth !== getNextMultiple(providedWidth, widthMultiple)) {
-          throw Error('invalid "innerWidth", "wallThicknessX", "widthMultiple" combination for "expandX" set to "none". Either change "expandX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+          throw Error('invalid "innerWidth", "wallThicknessX", "widthMultiple" combination for "expandStrategyX" set to "none". Either change "expandStrategyX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
         }
       }
     }
 
-    const hasInnerDepth = innerWidth !== null;
-    const hasOuterDepth = outerWidth !== null;
-    const hasDepthMultiple = widthMultiple !== null;
+    const hasInnerDepth = innerDepth !== null;
+    const hasOuterDepth = outerDepth !== null;
+    const hasDepthMultiple = depthMultiple !== null;
 
     { // depth validation
       if (wallThicknessY <= 0) {
@@ -135,26 +135,26 @@ export class Container extends CsgWrapper {
         throw Error('at least one of "innerDepth", "outerDepth", "depthMultiple" must be provided');
       }
 
-      if (hasInnerDepth && !hasOuterDepth && !hasDepthMultiple && expandX !== ExpandStrategy.none) {
-        throw Error('"expandY" must be "none" when only "innerDepth" is provided');
+      if (hasInnerDepth && !hasOuterDepth && !hasDepthMultiple && expandStrategyX !== ExpandStrategy.none) {
+        throw Error('"expandStrategyY" must be "none" when only "innerDepth" is provided');
       }
 
       if (hasOuterDepth && hasDepthMultiple && !_.isInteger(outerDepth / depthMultiple)) {
         throw Error('"outerDepth" is not a multiple of "depthMultiple');
       }
 
-      if (!hasInnerDepth && (hasOuterDepth || hasDepthMultiple) && expandY !== ExpandStrategy.inside) {
-        throw Error('"expandY" must be "inside" when "innerDepth" is not provided');
+      if (!hasInnerDepth && (hasOuterDepth || hasDepthMultiple) && expandStrategyY !== ExpandStrategy.inside) {
+        throw Error('"expandStrategyY" must be "inside" when "innerDepth" is not provided');
       }
 
-      if (hasInnerDepth && hasOuterDepth && expandY === ExpandStrategy.none && (innerDepth + 2 * wallThicknessY) !== outerDepth) {
-        throw Error('invalid "innerDepth", "wallThicknessY", "outerDepth" combination for "expandY" set to "none". Either change "expandY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+      if (hasInnerDepth && hasOuterDepth && expandStrategyY === ExpandStrategy.none && (innerDepth + 2 * wallThicknessY) !== outerDepth) {
+        throw Error('invalid "innerDepth", "wallThicknessY", "outerDepth" combination for "expandStrategyY" set to "none". Either change "expandStrategyY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
       }
 
-      if (hasInnerDepth && !hasOuterDepth && hasDepthMultiple && expandY === ExpandStrategy.none) {
-        const providedWidth = innerDepth + 2 * wallThicknessY;
-        if(providedWidth !== getNextMultiple(providedWidth, depthMultiple)) {
-          throw Error('invalid "innerDepth", "wallThicknessY", "depthMultiple" combination for "expandY" set to "none". Either change "expandY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+      if (hasInnerDepth && !hasOuterDepth && hasDepthMultiple && expandStrategyY === ExpandStrategy.none) {
+        const providedDepth = innerDepth + 2 * wallThicknessY;
+        if(providedDepth !== getNextMultiple(providedDepth, depthMultiple)) {
+          throw Error('invalid "innerDepth", "wallThicknessY", "depthMultiple" combination for "expandStrategyY" set to "none". Either change "expandStrategyY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
         }
       }
     }
@@ -171,9 +171,9 @@ export class Container extends CsgWrapper {
         : computedWidth;
     }
 
-    if (expandX === ExpandStrategy.inside) {
+    if (expandStrategyX === ExpandStrategy.inside) {
       innerWidth = outerWidth - 2 * wallThicknessX;
-    } else if (expandX === ExpandStrategy.wall) {
+    } else if (expandStrategyX === ExpandStrategy.wall) {
       wallThicknessX = (outerWidth - innerWidth) / 2;
     }
 
@@ -189,9 +189,9 @@ export class Container extends CsgWrapper {
         : computedDepth;
     }
 
-    if (expandY === ExpandStrategy.inside) {
+    if (expandStrategyY === ExpandStrategy.inside) {
       innerDepth = outerDepth - 2 * wallThicknessY;
-    } else if (expandY === ExpandStrategy.wall) {
+    } else if (expandStrategyY === ExpandStrategy.wall) {
       wallThicknessY = (outerDepth - innerDepth) / 2;
     }
 
@@ -209,6 +209,10 @@ export class Container extends CsgWrapper {
       if (baseHoleDepth < 0) {
         throw Error('"baseSupportLengthY" is too big')
       }
+    }
+
+    if (braceLengthX !== Infinity && braceLengthY !== Infinity && braceHeight === Infinity) {
+      throw Error('"braceHeight" must be provided when "braceLengthX" and/or "braceLengthY" is provided')
     }
 
     super({
@@ -245,7 +249,7 @@ export class Container extends CsgWrapper {
           new RectPrism({
             name: 'Front/Back Wall Holes',
             isOptional: true,
-            width: innerDepth - 2 * braceLengthX,
+            width: innerWidth - 2 * braceLengthX,
             depth: outerDepth,
             height: outerHeight - braceHeight - baseThickness,
           })

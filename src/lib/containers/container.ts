@@ -9,6 +9,7 @@ export enum ExpandStrategy {
 }
 
 export interface ContainerOptions {
+  name?: string,
   innerLength?: number,
   innerWidth?: number,
   innerDepth?: number,
@@ -40,7 +41,29 @@ export interface ContainerOptions {
 }
 
 export class Container extends CsgWrapper {
+  innerWidth: number;
+  innerDepth: number;
+  outerWidth: number;
+  outerDepth: number;
+  widthMultiple: null|number;
+  depthMultiple: null|number;
+  wallThicknessX: number;
+  wallThicknessY: number;
+  expandStrategyX: ExpandStrategy;
+  expandStrategyY: ExpandStrategy;
+  baseHoleWidth: number;
+  baseHoleDepth: number;
+  baseSupportLengthX: number;
+  baseSupportLengthY: number;
+  braceLengthX: number;
+  braceLengthY: number;
+  braceHeight: number;
+  baseThickness: number;
+  innerHeight: number;
+  outerHeight: number;
+
   constructor({
+    name,
     innerLength = null,
     innerWidth = innerLength,
     innerDepth = innerLength,
@@ -75,8 +98,10 @@ export class Container extends CsgWrapper {
       (value: number) => value === null ? 0 : 1,
     );
 
-    if (heightParameterCount !== 2) {
-      throw Error('Must provide exactly two of "outerHeight", "innerHeight", "baseThickness"');
+    if (heightParameterCount === 3 && baseThickness + innerHeight !== outerHeight) {
+      throw Error('Invalid "baseThickness", "innerHeight", "outerHeight". Either provide less dimensions, or provide exact dimensions');
+    } else if (heightParameterCount < 2) {
+      throw Error('Must provide at least two of "outerHeight", "innerHeight", "baseThickness"');
     } else if (outerHeight === null) {
       outerHeight = innerHeight + baseThickness;
     } else if (innerHeight === null) {
@@ -88,6 +113,10 @@ export class Container extends CsgWrapper {
     const hasInnerWidth = innerWidth !== null;
     const hasOuterWidth = outerWidth !== null;
     const hasWidthMultiple = widthMultiple !== null;
+
+    const hasInnerDepth = innerDepth !== null;
+    const hasOuterDepth = outerDepth !== null;
+    const hasDepthMultiple = depthMultiple !== null;
 
     { // width validation
       if (wallThicknessX <= 0) {
@@ -110,8 +139,11 @@ export class Container extends CsgWrapper {
         throw Error('"expandStrategyX" must be "inside" when "innerWidth" is not provided');
       }
 
-      if (hasInnerWidth && hasOuterWidth && expandStrategyX === ExpandStrategy.none && (innerWidth + 2 * wallThicknessX) !== outerWidth) {
-        throw Error('invalid "innerWidth", "wallThicknessX", "outerWidth" combination for "expandStrategyX" set to "none". Either change "expandStrategyX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+      if (hasInnerWidth && hasOuterWidth && expandStrategyX === ExpandStrategy.none) {
+        const computedOuterWidth = (innerWidth + 2 * wallThicknessX);
+        if (computedOuterWidth !== outerWidth) {
+          throw Error('invalid "innerWidth", "wallThicknessX", "outerWidth" combination for "expandStrategyX" set to "none". Either change "expandStrategyX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+        }
       }
 
       if (hasInnerWidth && !hasOuterWidth && hasWidthMultiple && expandStrategyX === ExpandStrategy.none) {
@@ -121,10 +153,6 @@ export class Container extends CsgWrapper {
         }
       }
     }
-
-    const hasInnerDepth = innerDepth !== null;
-    const hasOuterDepth = outerDepth !== null;
-    const hasDepthMultiple = depthMultiple !== null;
 
     { // depth validation
       if (wallThicknessY <= 0) {
@@ -147,8 +175,11 @@ export class Container extends CsgWrapper {
         throw Error('"expandStrategyY" must be "inside" when "innerDepth" is not provided');
       }
 
-      if (hasInnerDepth && hasOuterDepth && expandStrategyY === ExpandStrategy.none && (innerDepth + 2 * wallThicknessY) !== outerDepth) {
-        throw Error('invalid "innerDepth", "wallThicknessY", "outerDepth" combination for "expandStrategyY" set to "none". Either change "expandStrategyY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+      if (hasInnerDepth && hasOuterDepth && expandStrategyY === ExpandStrategy.none) {
+        const computedOuterDepth = innerDepth + 2 * wallThicknessY;
+        if (computedOuterDepth !== outerDepth) {
+          throw Error('invalid "innerDepth", "wallThicknessY", "outerDepth" combination for "expandStrategyY" set to "none". Either change "expandStrategyY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
+        }
       }
 
       if (hasInnerDepth && !hasOuterDepth && hasDepthMultiple && expandStrategyY === ExpandStrategy.none) {
@@ -159,6 +190,7 @@ export class Container extends CsgWrapper {
       }
     }
 
+    // width initialization
     if (!hasInnerWidth) {
       innerWidth = 0; // default width for expansion
     }
@@ -177,6 +209,7 @@ export class Container extends CsgWrapper {
       wallThicknessX = (outerWidth - innerWidth) / 2;
     }
 
+    // depth initialization
     if (!hasInnerDepth) {
       innerDepth = 0; // default depth for expansion
     }
@@ -195,6 +228,7 @@ export class Container extends CsgWrapper {
       wallThicknessY = (outerDepth - innerDepth) / 2;
     }
 
+    // base support x initialization
     if (baseSupportLengthX !== Infinity) {
       baseHoleWidth = innerWidth - 2 * baseSupportLengthX;
 
@@ -203,6 +237,7 @@ export class Container extends CsgWrapper {
       }
     }
 
+    // base support y initialization
     if (baseSupportLengthY !== Infinity) {
       baseHoleDepth = innerDepth - 2 * baseSupportLengthY;
 
@@ -211,11 +246,13 @@ export class Container extends CsgWrapper {
       }
     }
 
+    // brace validation
     if (braceLengthX !== Infinity && braceLengthY !== Infinity && braceHeight === Infinity) {
       throw Error('"braceHeight" must be provided when "braceLengthX" and/or "braceLengthY" is provided')
     }
 
     super({
+      name,
       csg: new RectPrism({
         name: 'Outer Box',
         width: outerWidth,
@@ -256,5 +293,51 @@ export class Container extends CsgWrapper {
             .translateXZ(wallThicknessX + braceLengthX, baseThickness + braceHeight)
         )
     });
+
+    this.innerWidth = innerWidth;
+    this.innerDepth = innerDepth;
+    this.outerWidth = outerWidth;
+    this.outerDepth = outerDepth;
+    this.widthMultiple = widthMultiple;
+    this.depthMultiple = depthMultiple;
+    this.wallThicknessX = wallThicknessX;
+    this.wallThicknessY = wallThicknessY;
+    this.expandStrategyX = expandStrategyX;
+    this.expandStrategyY = expandStrategyY;
+    this.baseHoleWidth = baseHoleWidth;
+    this.baseHoleDepth = baseHoleDepth;
+    this.baseSupportLengthX = baseSupportLengthX;
+    this.baseSupportLengthY = baseSupportLengthY;
+    this.braceLengthX = braceLengthX;
+    this.braceLengthY = braceLengthY;
+    this.braceHeight = braceHeight;
+    this.baseThickness = baseThickness;
+    this.innerHeight = innerHeight;
+    this.outerHeight = outerHeight;
+  }
+
+  log() {
+    return super.log({
+      innerWidth: this.innerWidth,
+      innerDepth: this.innerDepth,
+      outerWidth: this.outerWidth,
+      outerDepth: this.outerDepth,
+      widthMultiple: this.widthMultiple,
+      depthMultiple: this.depthMultiple,
+      wallThicknessX: this.wallThicknessX,
+      wallThicknessY: this.wallThicknessY,
+      expandStrategyX: this.expandStrategyX,
+      expandStrategyY: this.expandStrategyY,
+      baseHoleWidth: this.baseHoleWidth,
+      baseHoleDepth: this.baseHoleDepth,
+      baseSupportLengthX: this.baseSupportLengthX,
+      baseSupportLengthY: this.baseSupportLengthY,
+      braceLengthX: this.braceLengthX,
+      braceLengthY: this.braceLengthY,
+      braceHeight: this.braceHeight,
+      baseThickness: this.baseThickness,
+      innerHeight: this.innerHeight,
+      outerHeight: this.outerHeight,
+    })
   }
 }

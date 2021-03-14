@@ -173,6 +173,15 @@ const map = {
     baseHoleWidth: 2,
     baseSupportLengthY: 10,
   }),
+  androidPhone: () => new OfficeContainer({
+    outerWidth: 150,
+    innerDepth: 12.5,
+    outerHeight: 40,
+    braceHeight: 20,
+    braceLength: 50,
+    baseHoleDepth: 2,
+    baseSupportLengthX: 50
+  })
 };
 
 export const {

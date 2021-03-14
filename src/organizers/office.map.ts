@@ -3,11 +3,24 @@ import {
   ExpandStrategy,
   Container,
   ContainerOptions,
+  RepeatContainer,
+  RepeatContainerOptions,
 } from '../lib/containers';
 import { buildExportsForMap } from '../lib/typedUtils';
 
 class OfficeContainer extends Container {
   constructor(options: ContainerOptions) {
+    super({
+      ...options,
+      sideMultiple: 5,
+      expandStrategy: ExpandStrategy.inside,
+      baseThickness: 0.3,
+    })
+  }
+}
+
+class RepeatOfficeContainer extends RepeatContainer {
+  constructor(options: RepeatContainerOptions) {
     super({
       ...options,
       sideMultiple: 5,
@@ -97,6 +110,14 @@ const map = {
     braceLengthX: 20,
     baseSupportLength: 20,
   }),
+  bookmarkPostIts: () => new RepeatOfficeContainer({
+    containerCountX: 2,
+    innerWidth: 5,
+    innerDepth: 19,
+    outerHeight: 30,
+    baseHoleWidth: 1,
+    baseSupportLengthY: 10,
+  }),
   smallRulers: () => new OfficeContainer({
     innerWidth: 158,
     innerDepth: 4,
@@ -116,6 +137,41 @@ const map = {
     outerHeight: 100,
     braceHeight: 30,
     braceLength: 30,
+  }),
+  erasers: () => new RepeatOfficeContainer({
+    containerCountX: 4,
+    innerWidth: 10.5,
+    innerDepth: 25.5,
+    baseHoleWidth: 1,
+    baseHoleDepth: 5,
+    outerHeight: 30,
+  }),
+  labelMakerLabels: () => new RepeatOfficeContainer({
+    containerCountX: 4,
+    innerWidth: 17,
+    innerDepth: 65,
+    outerHeight: 40,
+    baseHoleWidth: 5,
+    baseSupportLengthY: 20,
+    braceHeight: 20,
+    braceLengthX: 8,
+    braceLengthY: 20,
+  }),
+  sdCards: () => new RepeatOfficeContainer({
+    containerCountX: 4,
+    innerWidth: 2.4,
+    innerDepth: 24.2,
+    outerHeight: 20,
+    baseHoleWidth: 1,
+    baseSupportLengthY: 10,
+  }),
+  mechanicalPencilRefills: () => new RepeatOfficeContainer({
+    containerCountX: 2,
+    innerWidth: 9,
+    innerDepth: 20,
+    outerHeight: 40,
+    baseHoleWidth: 2,
+    baseSupportLengthY: 10,
   }),
 };
 

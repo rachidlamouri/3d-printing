@@ -33,6 +33,12 @@ export class CsgWrapper {
     };
   }
 
+  static union (...csgWrappers: CsgWrapper[]) {
+    const csgs = csgWrappers.map(({ csg }) => csg)
+      .filter((csg) => csg !== null);
+    return new CsgWrapper({ csg: union(...csgs) });
+  }
+
   get csg() {
     return this._csg;
   }
@@ -61,6 +67,14 @@ export class CsgWrapper {
     return this.translate(0, yDistance, zDistance);
   }
 
+  translateX(distance: number) {
+    return this.translate(distance, 0, 0);
+  }
+
+  translateY(distance: number) {
+    return this.translate(0, distance, 0);
+  }
+
   translateZ(distance: number) {
     return this.translate(0, 0, distance);
   }
@@ -71,15 +85,18 @@ export class CsgWrapper {
   }
 
   union(...csgWrappers: CsgWrapper[]) {
-    const csgs = csgWrappers.map(({ csg }) => csg)
-      .filter((csg) => csg !== null);
-    return new CsgWrapper({ csg: union(this.csg, ...csgs) });
+    return CsgWrapper.union(this, ...csgWrappers);
   }
 
   difference(...csgWrappers: CsgWrapper[]) {
     const csgs = csgWrappers.map(({ csg }) => csg)
       .filter((csg) => csg !== null);
     return new CsgWrapper({ csg: difference(this.csg, ...csgs) });
+  }
+
+  tap(callback: Function) {
+    callback(this);
+    return this;
   }
 
   log(data = {}) {

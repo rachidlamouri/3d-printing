@@ -69,6 +69,11 @@ const map = {
     outerLength: 50,
     outerHeight: 100,
   }),
+  compass: () => new OfficeContainer({
+    outerWidth: 50,
+    innerDepth: 17,
+    outerHeight: 100,
+  }),
   glueStick: () => new OfficeContainer({
     innerLength: 19.8,
     baseHoleLength: 5,
@@ -92,10 +97,30 @@ const map = {
     braceLengthX: 20,
     baseSupportLength: 20,
   }),
+  smallRulers: () => new OfficeContainer({
+    innerWidth: 158,
+    innerDepth: 4,
+    outerHeight: 20,
+    braceHeight: 10,
+    braceLength: 30,
+  }),
+  pencilSharpener: () => new OfficeContainer({
+    innerWidth: 16.5,
+    innerDepth: 12,
+    outerHeight: 15,
+    baseHoleLength: 5,
+  }),
+  envelopes: () => new OfficeContainer({
+    outerWidth: 110,
+    outerDepth: 20,
+    outerHeight: 100,
+    braceHeight: 30,
+    braceLength: 30,
+  }),
 };
 
 export const {
   main,
   getParameterDefinitions,
   objectNames,
-} = buildExportsForMap(map, 'bigPostIts')
+} = buildExportsForMap(map)

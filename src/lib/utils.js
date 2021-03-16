@@ -33,10 +33,19 @@ const positionToMeta = (position) => {
 // TODO: track centerPosition
 // TODO: track cornerPosition
 class CsgMeta {
-  constructor(csg) {
+  constructor(csgOrCsgMeta) {
+    if (csgOrCsgMeta instanceof CsgMeta) {
+      _.assign(this, csgOrCsgMeta);
+      return;
+    }
+
     _.assign(this, {
-      csg,
+      csg: csgOrCsgMeta,
     });
+  }
+
+  static union(...csgMetas) {
+    return new CsgMeta(union(..._.map(csgMetas, 'csg')));
   }
 
   centerToOrigin() {
@@ -60,6 +69,16 @@ class CsgMeta {
       this.csg,
       ..._.map(csgMetas, 'csg'),
     ));
+  }
+
+  translateX(width) {
+    this.csg = this.csg.translate([width, 0]);
+    return this;
+  }
+
+  translateY(depth) {
+    this.csg = this.csg.translate([0, depth]);
+    return this;
   }
 
   translateZ(height) {
@@ -180,6 +199,7 @@ module.exports = {
   Cube,
   Cylinder,
   Trapezoid,
+  CsgMeta,
   positionToMeta,
   getNextMultiple,
   assembleMeta,

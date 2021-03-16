@@ -14,13 +14,12 @@ const filepaths = [
   ...glob.sync('./src/**/*.map.js'),
   ...glob.sync('./src/**/*.main.js'),
   ...glob.sync('./src/**/*.object.js'),
+  ...glob.sync('./build/src/**/*.map.js'),
 ];
 console.log('Found:', filepaths); // eslint-disable-line no-console
 
 const update = (filepath) => {
-  const supportedFileTypes = filepath.endsWith('.demo.js')
-    ? ['.amf']
-    : ['.amf', '.stl'];
+  const supportedFileTypes = ['.stl'];
 
   if (filepath.endsWith('.map.js')) {
     const cacheId = path.join(__dirname, filepath);
@@ -34,6 +33,7 @@ const update = (filepath) => {
     }
 
     const subfolder = filepath
+      .replace(/^\.\/build\/src\//, 'src/')
       .replace(/\.\//, '')
       .replace(/\//g, '_')
       .replace(/src_/, 'build/')
@@ -60,8 +60,8 @@ const update = (filepath) => {
     const filename = path.basename(filepath);
     const [objectName] = filename.split('.');
     const subfolder = filepath
-      .replace(/\.\//, '')
-      .replace(new RegExp(`${filename}`), '')
+      .replace(/^\.\//, '')
+      .replace(new RegExp(`/${filename}`), '')
       .replace(/\//g, '_')
       .replace(/^src_/, 'build/');
 
@@ -69,7 +69,7 @@ const update = (filepath) => {
       fs.mkdirSync(subfolder);
     }
 
-    const output = `${subfolder}${objectName}${extension}`;
+    const output = `${subfolder}/${objectName}${extension}`;
 
     const command = `"node_modules/.bin/openjscad" ${filepath} -o ${output}`;
     console.log(`  ${command}`); // eslint-disable-line no-console

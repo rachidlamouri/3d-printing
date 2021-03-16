@@ -1,5 +1,7 @@
 const { buildMakeContainerWithDefaults } = require('../../lib/makeContainer');
 const { center } = require('../../lib/utils');
+const { makeShims } = require('../lib/makeShims');
+const plan = require('./plan');
 
 const defaultWallThickness = 0.8;
 const defaults = {
@@ -10,6 +12,12 @@ const defaults = {
 
 const makeContainerWithFlexibleDimensions = buildMakeContainerWithDefaults({
   ...defaults,
+  wallThickness: defaultWallThickness,
+});
+
+const makeContainerWithoutFlexing = buildMakeContainerWithDefaults({
+  ...defaults,
+  sideLengthMultiple: null,
   wallThickness: defaultWallThickness,
 });
 
@@ -29,6 +37,13 @@ const map = {
     innerDepth: chapstickDiameter,
     outerHeight: 20,
   }),
+  boundingBox: () => makeContainerWithoutFlexing({
+    innerWidth: plan.boundingContainer.withTolerance.width,
+    innerDepth: plan.boundingContainer.withTolerance.height,
+    bottomClearance: Infinity,
+    minBottomHoleSideLength: 0,
+  }),
+  shims: () => ({ entity: makeShims(plan.shimGroups) }),
 };
 
 const getParameterDefinitions = () => [

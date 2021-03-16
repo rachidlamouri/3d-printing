@@ -14,7 +14,7 @@ module.exports.makeShims = (shimGroups = [], index = null) => {
   const topEdge = _.minBy(allPoints, 'y').y;
 
   const pointLength = 1;
-  const shimHeight = 9;
+  const shimHeight = 19;
   return union(
     ...filteredShimGroups.map((group) => (
       union(

@@ -29,6 +29,11 @@ export class RectPrism extends CsgWrapper {
 
     super({
       name,
+      position: {
+        x: width / 2,
+        y: depth / 2,
+        z: height / 2,
+      },
       csg: isInvalid ? null : cube([width, depth, height])
     });
 

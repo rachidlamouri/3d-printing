@@ -13,4 +13,8 @@ declare module '@jscad/csg/api' {
     union(...csgs: Csg[]): Csg;
     difference(...csgs: Csg[]): Csg;
   }
+
+  const transformations: {
+    transform(matrix: number[], object: Csg): Csg;
+  }
 }

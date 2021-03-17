@@ -2,10 +2,19 @@ import _ from 'lodash';
 import {
   union,
   difference,
+  transform,
 } from '../jscadApiWrapper';
+import { degreesToRadians } from '../typedUtils';
+
+interface Position {
+  x: number,
+  y: number,
+  z: number,
+}
 
 interface BaseOptions {
   name?: string;
+  position: Position;
 }
 
 interface CsgOptions extends BaseOptions {
@@ -18,42 +27,49 @@ interface WrapperOptions extends BaseOptions {
 
 type CsgWrapperOptons = CsgOptions | WrapperOptions;
 
-interface Position {
-  x: number,
-  y: number,
-  z: number,
-}
-
 export class CsgWrapper {
   name: string;
   position: Position;
   _csg: Csg;
 
   constructor(options: CsgWrapperOptons) {
-    this.name = options.name;
     this.csg = 'csg' in options ? options.csg : options.wrapper.csg;
-    this.position = {
-      x: 0,
-      y: 0,
-      z: 0,
-    };
+
+    ({
+      name: this.name,
+      position: this.position,
+    } = options);
   }
 
   static union (...csgWrappers: CsgWrapper[]) {
-    const csgs = csgWrappers.map(({ csg }) => csg)
-      .filter((csg) => csg !== null);
-    return new CsgWrapper({ csg: union(...csgs) });
+    const validWrappers = csgWrappers.filter(({ csg }) => csg !== null);
+
+    return new CsgWrapper({
+      position: {
+        x: _.meanBy(validWrappers, ({ position }) => position.x),
+        y: _.meanBy(validWrappers, ({ position }) => position.y),
+        z: _.meanBy(validWrappers, ({ position }) => position.z),
+      },
+      csg: union(...validWrappers.map(({ csg }) => csg)),
+    });
   }
 
   static difference(...csgWrappers: CsgWrapper[]) {
-    const csgs = csgWrappers.map(({ csg }) => csg)
-      .filter((csg) => csg !== null);
+    const validWrappers = csgWrappers.filter(({ csg }) => csg !== null);
 
-    return new CsgWrapper({
-      csg: csgs.length > 0
-        ? difference(...csgs)
-        : null,
-    });
+    return validWrappers.length > 0
+      ? new CsgWrapper({
+        position: { ...validWrappers[0].position },
+        csg: difference(...validWrappers.map(({ csg }) => csg)),
+      })
+      : new CsgWrapper({
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        csg: null
+      });
   }
 
   get csg() {
@@ -65,7 +81,10 @@ export class CsgWrapper {
   }
 
   copy() {
-    return new CsgWrapper({ csg: this.csg });
+    return new CsgWrapper({
+      position: { ... this.position },
+      csg: this.csg,
+    });
   }
 
   translate(xDistance: number, yDistance: number, zDistance: number) {
@@ -100,9 +119,69 @@ export class CsgWrapper {
     return this.translate(0, 0, distance);
   }
 
-  centerXY() {
-    this.csg = this.csg?.center([true, true, false]);
+  rotateX(degrees: number) {
+    const position = { ...this.position };
+    const radians = degreesToRadians(degrees);
+
+    this.centerXYZ();
+    this.csg = transform(
+      [
+        1, 0, 0, 0,
+        0, Math.cos(radians), -Math.sin(radians), 0,
+        0, Math.sin(radians), Math.cos(radians), 0,
+        0, 0, 0, 1,
+      ],
+      this.csg,
+    );
+    this.translate(position.x, position.y, position.z);
+
     return this;
+  }
+
+  rotateY(degrees: number) {
+    const position = { ...this.position };
+    const radians = degreesToRadians(degrees);
+
+    this.centerXYZ();
+    this.csg = transform(
+      [
+        Math.cos(radians), 0, Math.sin(radians), 0,
+        0, 1, 0, 0,
+        -Math.sin(radians), 0, Math.cos(radians), 0,
+        0, 0, 0, 1,
+      ],
+      this.csg,
+    );
+    this.translate(position.x, position.y, position.z);
+
+    return this;
+  }
+
+  rotateZ(degrees: number) {
+    const position = { ...this.position };
+    const radians = degreesToRadians(degrees);
+
+    this.centerXYZ();
+    this.csg = transform(
+      [
+        Math.cos(radians), -Math.sin(radians), 0, 0,
+        Math.sin(radians), Math.cos(radians), 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+      ],
+      this.csg,
+    );
+    this.translate(position.x, position.y, position.z);
+
+    return this;
+  }
+
+  centerXY() {
+    return this.translateXY(-this.position.x, -this.position.y);
+  }
+
+  centerXYZ() {
+    return this.translate(-this.position.x, -this.position.y, -this.position.z);
   }
 
   union(...csgWrappers: CsgWrapper[]) {

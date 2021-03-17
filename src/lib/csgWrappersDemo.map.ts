@@ -7,10 +7,16 @@ import { buildExportsForMap } from './typedUtils';
 
 const map = {
   csg: () => (
-    new CsgWrapper({ csg: cube([10, 10, 2]) })
+    new CsgWrapper({
+      position: { x: 5, y: 5, z: 1 },
+      csg: cube([10, 10, 2]),
+    })
       .centerXY()
       .union(
-        new CsgWrapper({ csg: cylinder({ h: 10, d: 2 }) })
+        new CsgWrapper({
+          position: { x: 0, y: 0, z: 5 },
+          csg: cylinder({ h: 10, d: 2 }),
+        })
           .translateZ(2)
           .centerXY()
       )
@@ -20,6 +26,24 @@ const map = {
     depth: 10,
     height: 4,
   }),
+  rotateX: () => new RectPrism({
+    width: 20,
+    depth: 10,
+    height: 4,
+  })
+    .rotateX(45),
+  rotateY: () => new RectPrism({
+    width: 20,
+    depth: 10,
+    height: 4,
+  })
+    .rotateY(45),
+  rotateZ: () => new RectPrism({
+    width: 20,
+    depth: 10,
+    height: 4,
+  })
+    .rotateZ(45),
 };
 
 export const {

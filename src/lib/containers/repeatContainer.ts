@@ -192,6 +192,11 @@ export class RepeatContainer extends CsgWrapper {
 
     super({
       name,
+      position: {
+        x: outerWidth / 2,
+        y: outerDepth / 2,
+        z: outerHeight / 2,
+      },
       wrapper: CsgWrapper.union(
         ...indices.map(([xIndex, yIndex]) => (
           new Container({

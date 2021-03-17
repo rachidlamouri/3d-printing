@@ -47,6 +47,10 @@ export class CsgWrapper {
     this._csg = _.isNil(value) ? null : value;
   }
 
+  copy() {
+    return new CsgWrapper({ csg: this.csg });
+  }
+
   translate(xDistance: number, yDistance: number, zDistance: number) {
     this.position.x += xDistance;
     this.position.y += yDistance;

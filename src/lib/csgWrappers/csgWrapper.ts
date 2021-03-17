@@ -14,10 +14,10 @@ interface Position {
 
 interface BaseOptions {
   name?: string;
-  position: Position;
 }
 
 interface CsgOptions extends BaseOptions {
+  position: Position;
   csg: Csg;
 }
 
@@ -33,12 +33,15 @@ export class CsgWrapper {
   _csg: Csg;
 
   constructor(options: CsgWrapperOptons) {
-    this.csg = 'csg' in options ? options.csg : options.wrapper.csg;
+    this.name = options.name;
 
-    ({
-      name: this.name,
-      position: this.position,
-    } = options);
+    if ('csg' in options) {
+      this.csg = options.csg;
+      this.position = options.position;
+    } else {
+      this.csg = options.wrapper.csg;
+      this.position = { ...options.wrapper.position };
+    }
   }
 
   static union (...csgWrappers: CsgWrapper[]) {

@@ -87,7 +87,7 @@ export class CsgWrapper {
     });
   }
 
-  translate(xDistance: number, yDistance: number, zDistance: number) {
+  translateXYZ(xDistance: number, yDistance: number, zDistance: number) {
     this.position.x += xDistance;
     this.position.y += yDistance;
     this.position.z += zDistance;
@@ -96,27 +96,27 @@ export class CsgWrapper {
   }
 
   translateXY(xDistance: number, yDistance: number) {
-    return this.translate(xDistance, yDistance, 0);
+    return this.translateXYZ(xDistance, yDistance, 0);
   }
 
   translateXZ(xDistance: number, zDistance: number) {
-    return this.translate(xDistance, 0, zDistance);
+    return this.translateXYZ(xDistance, 0, zDistance);
   }
 
   translateYZ(yDistance: number, zDistance: number,) {
-    return this.translate(0, yDistance, zDistance);
+    return this.translateXYZ(0, yDistance, zDistance);
   }
 
   translateX(distance: number) {
-    return this.translate(distance, 0, 0);
+    return this.translateXYZ(distance, 0, 0);
   }
 
   translateY(distance: number) {
-    return this.translate(0, distance, 0);
+    return this.translateXYZ(0, distance, 0);
   }
 
   translateZ(distance: number) {
-    return this.translate(0, 0, distance);
+    return this.translateXYZ(0, 0, distance);
   }
 
   rotateX(degrees: number) {
@@ -133,7 +133,7 @@ export class CsgWrapper {
       ],
       this.csg,
     );
-    this.translate(position.x, position.y, position.z);
+    this.translateXYZ(position.x, position.y, position.z);
 
     return this;
   }
@@ -152,7 +152,7 @@ export class CsgWrapper {
       ],
       this.csg,
     );
-    this.translate(position.x, position.y, position.z);
+    this.translateXYZ(position.x, position.y, position.z);
 
     return this;
   }
@@ -171,7 +171,7 @@ export class CsgWrapper {
       ],
       this.csg,
     );
-    this.translate(position.x, position.y, position.z);
+    this.translateXYZ(position.x, position.y, position.z);
 
     return this;
   }
@@ -181,7 +181,7 @@ export class CsgWrapper {
   }
 
   centerXYZ() {
-    return this.translate(-this.position.x, -this.position.y, -this.position.z);
+    return this.translateXYZ(-this.position.x, -this.position.y, -this.position.z);
   }
 
   union(...csgWrappers: CsgWrapper[]) {

@@ -275,7 +275,7 @@ export class Container extends CsgWrapper {
             depth: innerDepth,
             height: innerHeight,
           })
-            .translate(wallThicknessX, wallThicknessY, baseThickness),
+            .translateXYZ(wallThicknessX, wallThicknessY, baseThickness),
           new RectPrism({
             name: 'Base Hole',
             isOptional: true,

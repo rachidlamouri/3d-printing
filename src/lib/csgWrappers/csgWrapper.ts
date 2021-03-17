@@ -4,10 +4,19 @@ import {
   difference,
 } from '../jscadApiWrapper';
 
-interface CsgWrapperOptions {
+interface BaseOptions {
   name?: string;
-  csg: Csg|CsgWrapper;
 }
+
+interface CsgOptions extends BaseOptions {
+  csg: Csg;
+}
+
+interface WrapperOptions extends BaseOptions {
+  wrapper: CsgWrapper;
+}
+
+type CsgWrapperOptons = CsgOptions | WrapperOptions;
 
 interface Position {
   x: number,
@@ -20,12 +29,9 @@ export class CsgWrapper {
   position: Position;
   _csg: Csg;
 
-  constructor({
-    name = '',
-    csg,
-  }: CsgWrapperOptions) {
-    this.name = name;
-    this.csg = csg instanceof CsgWrapper ? csg.csg : csg;
+  constructor(options: CsgWrapperOptons) {
+    this.name = options.name;
+    this.csg = 'csg' in options ? options.csg : options.wrapper.csg;
     this.position = {
       x: 0,
       y: 0,

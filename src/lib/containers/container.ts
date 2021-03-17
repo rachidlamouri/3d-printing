@@ -255,7 +255,7 @@ export class Container extends CsgWrapper {
 
     super({
       name,
-      csg: new RectPrism({
+      wrapper: new RectPrism({
         name: 'Outer Box',
         isOptional,
         width: outerWidth,

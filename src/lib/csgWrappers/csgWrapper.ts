@@ -39,6 +39,17 @@ export class CsgWrapper {
     return new CsgWrapper({ csg: union(...csgs) });
   }
 
+  static difference(...csgWrappers: CsgWrapper[]) {
+    const csgs = csgWrappers.map(({ csg }) => csg)
+      .filter((csg) => csg !== null);
+
+    return new CsgWrapper({
+      csg: csgs.length > 0
+        ? difference(...csgs)
+        : null,
+    });
+  }
+
   get csg() {
     return this._csg;
   }
@@ -93,9 +104,7 @@ export class CsgWrapper {
   }
 
   difference(...csgWrappers: CsgWrapper[]) {
-    const csgs = csgWrappers.map(({ csg }) => csg)
-      .filter((csg) => csg !== null);
-    return new CsgWrapper({ csg: difference(this.csg, ...csgs) });
+    return CsgWrapper.difference(this, ...csgWrappers);
   }
 
   tap(callback: Function) {

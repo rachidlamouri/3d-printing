@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CsgWrapper, RectPrism } from '../csgWrappers';
+import { CsgWrapper, RectangularPrism } from '../csgWrappers';
 import { getNextMultiple } from '../typedUtils';
 
 export enum ExpandStrategy {
@@ -260,7 +260,7 @@ export class Container extends CsgWrapper {
         y: outerDepth / 2,
         z: outerHeight / 2,
       },
-      wrapper: new RectPrism({
+      wrapper: new RectangularPrism({
         name: 'Outer Box',
         isOptional,
         width: outerWidth,
@@ -268,7 +268,7 @@ export class Container extends CsgWrapper {
         height: outerHeight,
       })
         .difference(
-          new RectPrism({
+          new RectangularPrism({
             name: 'Inner Hole',
             isOptional,
             width: innerWidth,
@@ -276,7 +276,7 @@ export class Container extends CsgWrapper {
             height: innerHeight,
           })
             .translateXYZ(wallThicknessX, wallThicknessY, baseThickness),
-          new RectPrism({
+          new RectangularPrism({
             name: 'Base Hole',
             isOptional: true,
             width: baseHoleWidth,
@@ -284,7 +284,7 @@ export class Container extends CsgWrapper {
             height: baseThickness,
           })
             .translateXY((outerWidth / 2) - (baseHoleWidth / 2), (outerDepth / 2) - (baseHoleDepth / 2)),
-          new RectPrism({
+          new RectangularPrism({
             name: 'Left/Right Wall Holes',
             isOptional: true,
             width: outerWidth,
@@ -292,7 +292,7 @@ export class Container extends CsgWrapper {
             height: outerHeight - braceHeight - baseThickness,
           })
             .translateYZ(wallThicknessY + braceLengthY, baseThickness + braceHeight),
-          new RectPrism({
+          new RectangularPrism({
             name: 'Front/Back Wall Holes',
             isOptional: true,
             width: innerWidth - 2 * braceLengthX,

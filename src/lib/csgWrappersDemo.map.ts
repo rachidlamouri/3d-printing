@@ -1,7 +1,7 @@
 import { cube, cylinder } from './jscadApiWrapper';
 import {
   CsgWrapper,
-  RectPrism
+  RectangularPrism,
 } from './csgWrappers';
 import { buildExportsForMap } from './typedUtils';
 
@@ -21,24 +21,24 @@ const map = {
           .centerXY()
       )
   ),
-  rectPrism: () => new RectPrism({
+  rectPrism: () => new RectangularPrism({
     width: 20,
     depth: 10,
     height: 4,
   }),
-  rotateX: () => new RectPrism({
+  rotateX: () => new RectangularPrism({
     width: 20,
     depth: 10,
     height: 4,
   })
     .rotateX(45),
-  rotateY: () => new RectPrism({
+  rotateY: () => new RectangularPrism({
     width: 20,
     depth: 10,
     height: 4,
   })
     .rotateY(45),
-  rotateZ: () => new RectPrism({
+  rotateZ: () => new RectangularPrism({
     width: 20,
     depth: 10,
     height: 4,

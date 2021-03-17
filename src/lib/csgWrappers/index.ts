@@ -1,2 +1,2 @@
 export * from './csgWrapper';
-export * from './rectPrism';
+export * from './rectangularPrism';

@@ -1,7 +1,7 @@
 import { cube } from '../jscadApiWrapper';
 import { CsgWrapper } from './csgWrapper';
 
-interface RectPrismOptions {
+interface RectangularPrismOptions {
   name?: string;
   width: number;
   depth: number;
@@ -9,7 +9,7 @@ interface RectPrismOptions {
   isOptional?: boolean;
 }
 
-export class RectPrism extends CsgWrapper {
+export class RectangularPrism extends CsgWrapper {
   width: number;
   depth: number;
   height: number;
@@ -20,7 +20,7 @@ export class RectPrism extends CsgWrapper {
     depth,
     height,
     isOptional = false,
-  }: RectPrismOptions) {
+  }: RectangularPrismOptions) {
     const isInvalid = width <= 0 || depth <= 0 || height <= 0;
 
     if (isInvalid && !isOptional) {

@@ -10,6 +10,7 @@ export enum ExpandStrategy {
 
 export interface ContainerOptions {
   name?: string,
+  isOptional?: boolean,
   innerLength?: number,
   innerWidth?: number,
   innerDepth?: number,
@@ -64,6 +65,7 @@ export class Container extends CsgWrapper {
 
   constructor({
     name,
+    isOptional = false,
     innerLength = null,
     innerWidth = innerLength,
     innerDepth = innerLength,
@@ -255,6 +257,7 @@ export class Container extends CsgWrapper {
       name,
       csg: new RectPrism({
         name: 'Outer Box',
+        isOptional,
         width: outerWidth,
         depth: outerDepth,
         height: outerHeight,
@@ -262,6 +265,7 @@ export class Container extends CsgWrapper {
         .difference(
           new RectPrism({
             name: 'Inner Hole',
+            isOptional,
             width: innerWidth,
             depth: innerDepth,
             height: innerHeight,

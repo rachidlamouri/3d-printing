@@ -117,6 +117,11 @@ export class CsgWrapper {
     });
   }
 
+  replicate(count: number, callback: (...wrappers: CsgWrapper[]) => CsgWrapper) {
+    const wrappers = _.range(count).map(() => this.copy());
+    return callback(...wrappers);
+  }
+
   translateXYZ(xDistance: number, yDistance: number, zDistance: number) {
     this.position.x += xDistance;
     this.position.y += yDistance;

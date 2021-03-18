@@ -32,19 +32,19 @@ const map = {
     depth: 10,
     height: 4,
   })
-    .rotateX(45),
+    .rotateX(90),
   rotateY: () => new RectangularPrism({
     width: 20,
     depth: 10,
     height: 4,
   })
-    .rotateY(45),
+    .rotateY(90),
   rotateZ: () => new RectangularPrism({
     width: 20,
     depth: 10,
     height: 4,
   })
-    .rotateZ(45),
+    .rotateZ(90),
   cylinderByRadius: () => new Cylinder({
     radius: 20,
     height: 30,

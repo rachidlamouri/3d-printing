@@ -19,4 +19,4 @@ export const buildExportsForMap = (map: CreatorMap, singleCompile: string = null
 
 export const getNextMultiple = (value: number, multiplier: number) => Math.ceil(value / multiplier) * multiplier;
 
-export const degreesToRadians = (degrees: number) => degrees * 180 / Math.PI;
+export const degreesToRadians = (degrees: number) => degrees * Math.PI / 180;

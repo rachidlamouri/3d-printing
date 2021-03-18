@@ -59,6 +59,10 @@ export class CsgWrapper {
   }
 
   static difference(...csgWrappers: CsgWrapper[]) {
+    return CsgWrapper.subtract(...csgWrappers);
+  }
+
+  static subtract(...csgWrappers: CsgWrapper[]) {
     const validWrappers = csgWrappers.filter(({ csg }) => csg !== null);
 
     return validWrappers.length > 0
@@ -215,7 +219,11 @@ export class CsgWrapper {
   }
 
   difference(...csgWrappers: CsgWrapper[]) {
-    return CsgWrapper.difference(this, ...csgWrappers);
+    return CsgWrapper.subtract(this, ...csgWrappers);
+  }
+
+  subtract(...csgWrappers: CsgWrapper[]) {
+    return CsgWrapper.subtract(this, ...csgWrappers);
   }
 
   intersect (...csgWrappers: CsgWrapper[]) {

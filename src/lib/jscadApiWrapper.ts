@@ -5,3 +5,5 @@ export const {
   booleanOps: { union, difference },
   transformations: { transform },
 } = jscadCsgApi;
+
+export const curveResolution = 500;

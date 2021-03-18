@@ -2,6 +2,7 @@ import { cube, cylinder } from './jscadApiWrapper';
 import {
   CsgWrapper,
   RectangularPrism,
+  Cylinder,
 } from './csgWrappers';
 import { buildExportsForMap } from './typedUtils';
 
@@ -44,6 +45,14 @@ const map = {
     height: 4,
   })
     .rotateZ(45),
+  cylinderByRadius: () => new Cylinder({
+    radius: 20,
+    height: 30,
+  }),
+  cylinderByDiameter: () => new Cylinder({
+    diameter: 20,
+    height: 10,
+  }),
 };
 
 export const {

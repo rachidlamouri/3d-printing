@@ -12,6 +12,7 @@ declare module '@jscad/csg/api' {
   const booleanOps: {
     union(...csgs: Csg[]): Csg;
     difference(...csgs: Csg[]): Csg;
+    intersection(...csgs: Csg[]): Csg;
   }
 
   const transformations: {

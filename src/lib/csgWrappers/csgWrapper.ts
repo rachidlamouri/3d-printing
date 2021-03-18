@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {
   union,
   difference,
+  intersection,
   transform,
 } from '../jscadApiWrapper';
 import { degreesToRadians } from '../typedUtils';
@@ -64,6 +65,28 @@ export class CsgWrapper {
       ? new CsgWrapper({
         position: { ...validWrappers[0].position },
         csg: difference(...validWrappers.map(({ csg }) => csg)),
+      })
+      : new CsgWrapper({
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        csg: null
+      });
+  }
+
+  static intersect(...csgWrappers: CsgWrapper[]) {
+    const validWrappers = csgWrappers.filter(({ csg }) => csg !== null);
+
+    return validWrappers.length > 0
+      ? new CsgWrapper({
+        position: {
+          x: _.meanBy(validWrappers, ({ position }) => position.x),
+          y: _.meanBy(validWrappers, ({ position }) => position.y),
+          z: _.meanBy(validWrappers, ({ position }) => position.z),
+        },
+        csg: intersection(...validWrappers.map(({ csg }) => csg)),
       })
       : new CsgWrapper({
         position: {
@@ -193,6 +216,10 @@ export class CsgWrapper {
 
   difference(...csgWrappers: CsgWrapper[]) {
     return CsgWrapper.difference(this, ...csgWrappers);
+  }
+
+  intersect (...csgWrappers: CsgWrapper[]) {
+    return CsgWrapper.intersect(this, ...csgWrappers);
   }
 
   tap(callback: Function) {

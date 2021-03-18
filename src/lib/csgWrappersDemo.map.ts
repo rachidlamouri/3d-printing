@@ -53,6 +53,19 @@ const map = {
     diameter: 20,
     height: 10,
   }),
+  intersect: () => CsgWrapper.intersect(
+    new RectangularPrism({
+      width: 20,
+      depth: 20,
+      height: 20,
+    }),
+    new RectangularPrism({
+      width: 20,
+      depth: 20,
+      height: 20,
+    })
+      .rotateZ(45),
+  )
 };
 
 export const {

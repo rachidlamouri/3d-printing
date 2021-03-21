@@ -5,60 +5,86 @@ import {
 } from '../lib/csgWrappers';
 
 interface WireWrapperOptions {
-  diameter?: number;
-  wireDiameter?: number;
+  pathDiameter: number;
+  wireDiameter: number;
 }
 
 export class WireWrapper extends CsgWrapper {
   constructor({
-    diameter,
+    pathDiameter,
+    wireDiameter,
   }: WireWrapperOptions) {
-    const armWidth = 20;
-    const guideLengthXY = 20;
-    const guideLengthZ = guideLengthXY;
-    const thickness = 2;
-    const armLength = diameter + 2 * guideLengthXY;
+    const pathAllowance = .2;
+    const wallThickness = 2;
+    const baseThickness = 0.3;
+    const guideHeight = 40;
+    const fullHeight = baseThickness + guideHeight;
+
+    const pathRadius = pathDiameter / 2;
+    const innerPathWallRadius = pathRadius - wireDiameter / 2 - pathAllowance / 2;
+    const innerHoleRadius = innerPathWallRadius - wallThickness;
+    const outerPathWallRadius = pathRadius + wireDiameter / 2 + pathAllowance / 2;
+    const outerRadius = outerPathWallRadius + wallThickness;
+
+    const wallHoleLength = 20;
 
     super({
       wrapper: CsgWrapper.union(
-        new RectangularPrism({
-          name: 'Arm',
-          width: armLength,
-          depth: armWidth,
-          height: thickness,
-        })
-          .centerXY()
-          .replicate(2, (armX, armY) => CsgWrapper.union(
-            armX,
-            armY.rotateZ(90),
-          )),
-        new RectangularPrism({
-          name: 'Guide Block: Arm',
-          width: armLength,
-          depth: armWidth,
-          height: guideLengthZ,
-        })
-          .centerXY()
-          .replicate(2, (guideBlockArmX, guideBlockArmY) => CsgWrapper.union(
-            guideBlockArmX,
-            guideBlockArmY.rotateZ(90),
-          ))
-          .intersect(
-            new Cylinder({
-              name: 'Guide Block: Cylinder',
-              diameter,
-              height: guideLengthZ,
-            })
-          )
-          .subtract(
-            new Cylinder({
-              name: 'Guide Block: Hole',
-              diameter: diameter - 2 * thickness,
-              height: guideLengthZ,
-            })
-          )
-          .translateZ(thickness),
+        new Cylinder({
+          name: 'Base',
+          radius: outerRadius,
+          height: baseThickness,
+        }),
+        CsgWrapper.union(
+          new Cylinder({
+            name: 'Inner Ring Block',
+            radius: innerPathWallRadius,
+            height: guideHeight,
+          }),
+          new Cylinder({
+            name: 'Outer Ring Block',
+            radius: outerRadius,
+            height: guideHeight,
+          })
+            .subtract(
+              new Cylinder({
+                name: 'Path Hole',
+                radius: outerPathWallRadius,
+                height: guideHeight,
+              }),
+              new RectangularPrism({
+                name: 'Wall Hole Template X',
+                width: outerRadius - innerPathWallRadius,
+                depth: wallHoleLength,
+                height: guideHeight,
+              })
+                .centerXY()
+                .replicate(2, (leftHole, rightHole,) => CsgWrapper.union(
+                  leftHole.translateX(-outerPathWallRadius),
+                  rightHole.translateX(outerPathWallRadius),
+                )),
+              new RectangularPrism({
+                name: 'Wall Hole Template Y',
+                width: wallHoleLength,
+                depth: outerRadius - innerPathWallRadius,
+                height: guideHeight,
+              })
+                .centerXY()
+                .replicate(2, (frontHole, backHole) => CsgWrapper.union(
+                  frontHole.translateY(-outerPathWallRadius),
+                  backHole.translateY(outerPathWallRadius),
+                )),
+            ),
+        )
+          .translateZ(baseThickness),
       )
+        .subtract(
+          new Cylinder({
+            name: 'Inner Ring Hole',
+            radius: innerHoleRadius,
+            height: fullHeight,
+          })
+        )
     })
   }
 }

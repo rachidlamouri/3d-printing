@@ -143,7 +143,7 @@ export class Container extends CsgWrapper {
 
       if (hasInnerWidth && hasOuterWidth && expandStrategyX === ExpandStrategy.none) {
         const computedOuterWidth = (innerWidth + 2 * wallThicknessX);
-        if (computedOuterWidth !== outerWidth) {
+        if (!(Math.abs(computedOuterWidth - outerWidth) < .001)) {
           throw Error('invalid "innerWidth", "wallThicknessX", "outerWidth" combination for "expandStrategyX" set to "none". Either change "expandStrategyX" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
         }
       }

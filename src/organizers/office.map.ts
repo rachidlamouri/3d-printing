@@ -5,16 +5,22 @@ import {
   ContainerOptions,
   RepeatContainer,
   RepeatContainerOptions,
+  Box,
+  BoxOptions,
 } from '../lib/containers';
 import { buildExportsForMap } from '../lib/typedUtils';
+
+const officeOptions = {
+  sideMultiple: 5,
+  baseThickness: 0.3,
+  expandStrategy: ExpandStrategy.inside,
+}
 
 class OfficeContainer extends Container {
   constructor(options: ContainerOptions) {
     super({
       ...options,
-      sideMultiple: 5,
-      expandStrategy: ExpandStrategy.inside,
-      baseThickness: 0.3,
+      ...officeOptions,
     })
   }
 }
@@ -23,9 +29,21 @@ class RepeatOfficeContainer extends RepeatContainer {
   constructor(options: RepeatContainerOptions) {
     super({
       ...options,
-      sideMultiple: 5,
-      expandStrategy: ExpandStrategy.inside,
-      baseThickness: 0.3,
+      ...officeOptions,
+    })
+  }
+}
+
+const defaultBoxHeight = 30;
+
+class OfficeBox extends Box {
+  constructor(options: BoxOptions) {
+    super({
+      ...options,
+      ...officeOptions,
+      outerHeight: options.outerHeight || defaultBoxHeight,
+      lidAllowance: 0.15,
+      lidSupportHeightFraction: .4,
     })
   }
 }
@@ -81,6 +99,22 @@ const map = {
   pens: () => new OfficeContainer({
     outerLength: 50,
     outerHeight: 100,
+  }),
+  rocketBookPens: () => new OfficeContainer({
+    outerWidth: 50,
+    outerDepth: 20,
+    outerHeight: 100,
+  }),
+  rocketBookCloth: () => new OfficeBox({
+    outerWidth: 70,
+    outerDepth: 60,
+    outerHeight: 40,
+  }).sideBySideX,
+  rocketBookClothBox: () => new OfficeContainer({
+    innerWidth: 60,
+    innerDepth: 40,
+    outerHeight: 40,
+    baseSupportLength: 12,
   }),
   compass: () => new OfficeContainer({
     outerWidth: 50,
@@ -181,7 +215,62 @@ const map = {
     braceLength: 50,
     baseHoleDepth: 2,
     baseSupportLengthX: 50
-  })
+  }),
+  paperClips: () => new OfficeBox({
+    outerLength: 40,
+  }).sideBySideX,
+  paperClipsBox: () => new OfficeContainer({
+    innerWidth: 40,
+    innerDepth: defaultBoxHeight,
+    outerHeight: 20,
+    baseSupportLength: 12,
+  }),
+  staples: () => new OfficeBox({
+    outerLength: 40,
+  }).sideBySideX,
+  staplesBox: () => new OfficeContainer({
+    innerWidth: 40,
+    innerDepth: defaultBoxHeight,
+    outerHeight: 20,
+    baseSupportLength: 12,
+  }),
+  binderClips: () => new OfficeBox({
+    outerWidth: 55,
+    outerDepth: 45,
+  }).sideBySideY,
+  binderClipsBox: () => new OfficeContainer({
+    innerWidth: 45,
+    innerDepth: defaultBoxHeight,
+    outerHeight: 30,
+    baseSupportLength: 12,
+  }),
+  thumbtacks: () => new OfficeBox({
+    outerLength: 60,
+  }).sideBySideX,
+  thumbtacksBox: () => new OfficeContainer({
+    innerWidth: 60,
+    innerDepth: defaultBoxHeight,
+    outerHeight: 30,
+    baseSupportLength: 12,
+  }),
+
+  // TODO: move to tools.map.ts
+  gafferTape: () => new OfficeContainer({
+    innerWidth: 110,
+    innerDepth: 52,
+    baseSupportLength: 15,
+    braceHeight: 20,
+    braceLength: 20,
+    outerHeight: 60,
+  }),
+  string: () => new OfficeContainer({
+    innerWidth: 84,
+    innerDepth: 58,
+    baseSupportLength: 15,
+    braceHeight: 22,
+    braceLength: 22,
+    outerHeight: 40,
+  }),
 };
 
 export const {

@@ -1,7 +1,15 @@
 import _ from 'lodash';
 import {
+  CsgWrapper,
   RectangularPrism,
+  Cylinder
 } from './lib/csgWrappers';
+import {
+  Container,
+  RepeatContainer,
+  Box,
+  ExpandStrategy,
+} from './lib/containers';
 import { buildExportsForMap } from './lib/typedUtils';
 
 const map = {

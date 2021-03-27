@@ -80,13 +80,6 @@ module.exports.main = () => {
       minBottomHoleSideLength: 3,
       bottomClearance: 6,
     }),
-    sdCards: makeRepeatContainer({
-      innerWidth: 2.7,
-      innerDepth: 25,
-      count: 4,
-      minBottomHoleSideLength: 1,
-      bottomClearance: 4,
-    }),
     stuffBoundingBox: makeContainerWithoutFlexing({
       innerDepth: stuffPlan.boundingContainer.withTolerance.height,
       innerWidth: stuffPlan.boundingContainer.withTolerance.width,

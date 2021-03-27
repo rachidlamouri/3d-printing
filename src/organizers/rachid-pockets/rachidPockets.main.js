@@ -45,6 +45,12 @@ module.exports.main = () => {
       innerDepth: 27,
       bottomClearance: 5,
     }),
+    earPlugBox: makeContainerWithFlexibleDimensions({
+      innerWidth: 39,
+      innerDepth: 18.5,
+      outerHeight: 20,
+      bottomClearance: 8,
+    }),
     supportBase: makeContainerWithFlexibleWalls({
       innerWidth: supportBaseSize,
       innerDepth: supportBaseSize,
@@ -82,10 +88,10 @@ module.exports.main = () => {
       bottomClearance: 4,
     }),
     boundingBox: makeContainerWithoutFlexing({
-      wallThickness: 1,
       innerDepth: plan.boundingContainer.withTolerance.height,
       innerWidth: plan.boundingContainer.withTolerance.width,
-      bottomClearance: 30,
+      minBottomHoleSideLength: 0,
+      bottomClearance: Infinity,
     }),
     shims: { entity: makeShims(plan.shimGroups) },
   };

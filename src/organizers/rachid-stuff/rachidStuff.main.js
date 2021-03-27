@@ -2,6 +2,7 @@ const { buildMakeContainerWithDefaults } = require('../../lib/makeContainer');
 const { buildMakeRepeatContainerWithDefaults } = require('../../lib/makeRepeatContainer');
 const { makeShims } = require('../lib/makeShims');
 const stuffPlan = require('./stuffPlan');
+const nightstandPlan = require('./nightstandPlan');
 
 const defaultWallThickness = 0.8;
 const defaults = {
@@ -87,6 +88,13 @@ module.exports.main = () => {
       bottomClearance: Infinity,
     }),
     stuffFiller: { entity: makeShims(stuffPlan.shimGroups) },
+    nightstandBoundingBox: makeContainerWithoutFlexing({
+      innerDepth: nightstandPlan.boundingContainer.withTolerance.height,
+      innerWidth: nightstandPlan.boundingContainer.withTolerance.width,
+      minBottomHoleSideLength: 0,
+      bottomClearance: Infinity,
+    }),
+    nightstandFiller: { entity: makeShims(nightstandPlan.shimGroups) },
   };
 
   const {

@@ -24,7 +24,7 @@ export class RectangularPrism extends CsgWrapper {
     const isInvalid = width <= 0 || depth <= 0 || height <= 0;
 
     if (isInvalid && !isOptional) {
-      throw Error(`invalid dimensions width: "${width}", depth: "${depth}", height: "${height}"`);
+      throw Error(`invalid dimensions for name: "${name}", width: "${width}", depth: "${depth}", height: "${height}"`);
     }
 
     super({

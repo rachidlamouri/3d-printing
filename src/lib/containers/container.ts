@@ -179,7 +179,7 @@ export class Container extends CsgWrapper {
 
       if (hasInnerDepth && hasOuterDepth && expandStrategyY === ExpandStrategy.none) {
         const computedOuterDepth = innerDepth + 2 * wallThicknessY;
-        if (computedOuterDepth !== outerDepth) {
+        if (!(Math.abs(computedOuterDepth - outerDepth) < .001)) {
           throw Error('invalid "innerDepth", "wallThicknessY", "outerDepth" combination for "expandStrategyY" set to "none". Either change "expandStrategyY" to "wall" or "inside", provide less dimensions, or provide exact dimensions');
         }
       }

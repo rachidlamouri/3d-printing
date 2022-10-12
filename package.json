@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
-    "@jscad/cli": "1.10.0",
+    "@jscad/cli": "2.2.24",
     "@jscad/csg": "0.7.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
